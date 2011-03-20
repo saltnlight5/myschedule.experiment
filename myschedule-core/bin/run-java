@@ -1,0 +1,95 @@
+#!/usr/bin/bash
+#
+# runjava - a unix/cygwin shell script to invoke java application.
+#
+# This script is assumed to be located at application's bin directory. Thus the
+# actual application directory is one directory up from this script.
+#
+# The Java's Classpath is automatically set with all jars under application's lib
+# directory plus the conventional Maven's output directories (target/test-classes and 
+# target/classes).
+#
+# User may invoke this script from any directory in the system.
+#
+# User may use the following env variables to further customize the JVM startup.
+#   JAVA_HOME      The location of JVM home directory (exclude the bin directory).
+#   JAVA_CP        Custom Classpath prefix before the auto classpath. Defualt to ".".
+#   JAVA_OPTS      Any additional JVM options to be set.
+#   RUNJAVA_DEBUG  If not empty, print the full java command line before executing it.
+# 
+# Zemian Deng 03-04-2011
+#
+
+# Application dir
+DIR=$(dirname $0)
+APP_DIR="$DIR/.."
+
+# Setup Java executable
+JAVA_CMD=java
+if [ ! -z "$JAVA_HOME" ]; then
+	JAVA_CMD="$JAVA_HOME/bin/java"
+fi
+
+# Setup Java Classpath
+JAVA_CP=${JAVA_CP:="."}
+if [ "$OS" = "Windows_NT" ]; then
+	APP_DIR="$(cygpath -w $DIR)\\.."
+	JAVA_CP="$JAVA_CP;$APP_DIR\\config"
+	JAVA_CP="$JAVA_CP;$APP_DIR\\target\\test-classes"
+	JAVA_CP="$JAVA_CP;$APP_DIR\\target\\classes"
+	JAVA_CP="$JAVA_CP;$APP_DIR\\target\\dependency\*"
+	JAVA_CP="$JAVA_CP;$APP_DIR\\lib\\*"
+	LIB="$APP_DIR\\lib"
+	if [ -d $LIB ]; then
+		for SUBDIR in $(ls "$LIB"); do
+			JAVA_CP="$JAVA_CP;$LIB\\$SUBDIR\\*"
+		done
+	fi
+	CP_SEP=';'
+else
+	JAVA_CP="$JAVA_CP:$APP_DIR/config"
+	JAVA_CP="$JAVA_CP:$APP_DIR/target/test-classes"
+	JAVA_CP="$JAVA_CP:$APP_DIR/target/classes"
+	JAVA_CP="$JAVA_CP:$APP_DIR/target/dependency/*"
+	JAVA_CP="$JAVA_CP:$APP_DIR/lib/*"
+	LIB=$APP_DIR/lib
+	if [ -d $LIB ]; then
+		for SUBDIR in $(ls "$LIB"); do
+			JAVA_CP="$JAVA_CP:$LIB/$SUBDIR/*"
+		done
+	fi
+	CP_SEP=':'
+fi
+
+# Setup JAVA_CP and JAVA_OPTS
+# This will parse -D and -cp options out from the script arguments.
+# This is done for convenient sake so users do not have to export JAVA_CP and JAVA_OPTS
+# saparately, but now they can pass into end of this runjava script instead. This implies
+# that the java program that's going to be run can not use -D and -cp options of its own! 
+# If that is needed then comment out the options below.
+FOUND_CP=
+NEW_ARG=
+for ARG in $@; do
+	if [[ ! -z $FOUND_CP ]]; then
+		JAVA_CP="$JAVA_CP$CP_SEP$ARG"
+		FOUND_CP=
+	else
+		case $ARG in
+		'-cp')
+			FOUND_CP=1
+			;;
+		'-D'*)
+			JAVA_OPTS="$JAVA_OPTS $ARG"
+			;;
+		*)
+			NEW_ARG="$NEW_ARG $ARG"
+			;;
+		esac
+	fi
+done
+
+# Run Java
+if [ ! -z "$RUNJAVA_DEBUG" ]; then
+	echo $JAVA_CMD $JAVA_OPTS -cp "$JAVA_CP" $NEW_ARG
+fi
+"$JAVA_CMD" $JAVA_OPTS -cp "$JAVA_CP" $NEW_ARG
