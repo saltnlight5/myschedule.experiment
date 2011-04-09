@@ -5,15 +5,15 @@
 # This script is assumed to be located at application's bin directory. Thus the
 # actual application directory is one directory up from this script.
 #
+# The Java's Classpath is automatically set with all jars under application's lib
+# directory plus the conventional Maven's output directories (target/test-classes and 
+# target/classes).
+#
 # User may invoke this script from any directory in the system.
 #
-# The Java's Classpath is automatically set with all jars under application's lib
-# directory.
-#
-# The following env variables may be used to further customize the JVM startup.
+# User may use the following env variables to further customize the JVM startup.
 #   JAVA_HOME      The location of JVM home directory (exclude the bin directory).
-#   JAVA_CP        Custom Classpath prefix before the auto classpath. Default to empty.
-#   JAVA_OPTS      Custom additional Java options values. Default to empty.
+#   JAVA_CP        Custom Classpath prefix before the auto classpath. Defualt to ".".
 #   RUN_JAVA_DEBUG    If not empty, print the full java command line before executing it.
 #   RUN_JAVA_NO_PARSE If not empty, skip the auto parsing of -D and -cp options from script arguments.
 # 
@@ -31,7 +31,7 @@ if [ ! -z "$JAVA_HOME" ]; then
 fi
 
 # Setup Java Classpath
-JAVA_CP=${JAVA_CP:=""}
+JAVA_CP=${JAVA_CP:="."}
 if [ "$OS" = "Windows_NT" ]; then
 	APP_DIR="$(cygpath -w $DIR)\\.."
 	JAVA_CP="$JAVA_CP;$APP_DIR\\config"
@@ -60,9 +60,6 @@ else
 	fi
 	CP_SEP=':'
 fi
-
-# Set application home directory sys props.
-JAVA_OPTS="$JAVA_OPTS -Dapp.home=$APP_DIR"
 
 # Setup JAVA_CP and JAVA_OPTS
 # This will parse -D and -cp options out from the script arguments.

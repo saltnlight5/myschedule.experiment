@@ -1,0 +1,22 @@
+Quartz Presentation (1.5 hours)
+
+- Introduction (5 mins)
+  * Quartz's features
+  * Quartz 1.8 vs Quartz 2.0
+- Scheduling Jobs (20 mins)
+  * Schedule one time job
+  * Schedule repeatable job
+  * Schedule cron job
+- How job is stored and executed (15 mins)
+  * InMemory job
+  * Persistent job
+- Scheduler Deployment (20 mins)
+  * Running single in-memory sheduler with configurable jobs in xml
+  * Running server/client scheduler using RMI
+  * Running Spring based scheduler in a Web container.
+- Tips and gotchas when working with quartz API (5 mins)
+  * Working with java Date and Calendar
+  * Quartz's Cron Expression
+  * What you need to know about quartz remoting and RMI
+  * What you need to know about Spring's SchedulerFactoryBean
+- QA session (25 mins)  
