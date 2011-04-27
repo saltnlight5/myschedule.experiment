@@ -8,6 +8,8 @@ import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SimpleTrigger;
 import org.quartz.impl.StdSchedulerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** 
  * This unit test will explore different ways to schedule job in Quartz(1.8.x). We will
@@ -17,6 +19,8 @@ import org.quartz.impl.StdSchedulerFactory;
  * @author Zemian Deng
  */
 public class ScheduleJobTest {
+	
+	private static Logger logger = LoggerFactory.getLogger(ScheduleJobTest.class);
 
 	@Test
 	public void testScheduleOnetimeJobNow() throws Exception {
@@ -129,6 +133,52 @@ public class ScheduleJobTest {
 		
 		scheduler.start();
 		Thread.sleep(5000);
+		scheduler.shutdown(true);
+	}
+	
+	@Test
+	public void testScheduleCronJobMemorialDay() throws Exception {
+		Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
+
+		String cronExpr = "0 0 0 ? 5 2L *"; // runs every year on last Monday of May at midnight
+		JobDetail job = new JobDetail("job1", SimpleJob.class);
+		CronTrigger trigger = new CronTrigger("job1", Scheduler.DEFAULT_GROUP, cronExpr);
+		
+		scheduler.scheduleJob(job, trigger);
+		
+		scheduler.start();
+		
+		// Let's print next 10 fire times
+		Date nextDate = new Date();
+		int count = 0;
+		while(count++ < 10) {
+			Date fireTime = trigger.getFireTimeAfter(nextDate);
+			logger.info("Next fireTime " + fireTime);
+			nextDate = fireTime;
+		}
+		
+		scheduler.shutdown(true);
+	}
+	
+	@Test
+	public void testScheduleCronJobThanksgivingDay() throws Exception {
+		Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
+
+		String cronExpr = "0 0 0 ? 11 5#4 *"; // runs every year on 4th Thursday of November at midnight
+		JobDetail job = new JobDetail("job1", SimpleJob.class);
+		CronTrigger trigger = new CronTrigger("job1", Scheduler.DEFAULT_GROUP, cronExpr);
+		
+		scheduler.scheduleJob(job, trigger);
+		
+		// Let's print next 10 fire times
+		Date nextDate = new Date();
+		int count = 0;
+		while(count++ < 10) {
+			Date fireTime = trigger.getFireTimeAfter(nextDate);
+			logger.info("Next fireTime " + fireTime);
+			nextDate = fireTime;
+		}
+		
 		scheduler.shutdown(true);
 	}
 }
