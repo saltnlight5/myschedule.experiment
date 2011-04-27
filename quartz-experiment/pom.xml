@@ -61,6 +61,7 @@
 		
 		<!-- Spring libraries 
 		We would use jcl-over-slf4j instead of common-logging.
+		-->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
@@ -78,7 +79,6 @@
 			<version>1.6.1</version>
 			<scope>runtime</scope>
 		</dependency>
-		-->
 
 		<!-- Quartz library -->
 		<dependency>

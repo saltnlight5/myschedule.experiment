@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+	<!-- Create a plain standalone quartz scheduler instance from a factory. -->
+	<bean id="quartzSchedulerFactory" class="org.quartz.impl.StdSchedulerFactory">
+		<constructor-arg>
+			<util:properties location="${config:classpath:quartz.properties.rmi-client}"></util:properties>
+		</constructor-arg>
+	</bean>
+	<bean id="quartzScheduler" class="org.quartz.Scheduler"
+		factory-bean="quartzSchedulerFactory" factory-method="getScheduler">
+	</bean>
+	
+	<!-- A test client to add a job -->
+	<bean id="quartzClient1" class="quartz.experiment.spring.QuartzClientBean" 
+		init-method="runAddJob">
+		<property name="scheduler" ref="quartzScheduler"></property>
+	</bean>
+	
+	<!-- A test client to remove a job
+	<bean id="quartzClient2" class="quartz.experiment.spring.QuartzClientBean" 
+		init-method="runRemoveJob">
+		<property name="scheduler" ref="quartzScheduler"></property>
+	</bean> -->
+	
+</beans>
