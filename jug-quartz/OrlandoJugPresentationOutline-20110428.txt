@@ -1,6 +1,22 @@
 Quartz Presentation (1.5 hours)
 
 - Introduction (5 mins)
+- Scheduling Jobs (20 mins)
+- How job is stored and executed (15 mins)
+- Scheduler Deployment (20 mins)
+- Tips and gotchas when working with quartz API (5 mins)
+- QA session (25 mins)  
+
+
+
+
+
+
+
+
+Quartz Presentation (1.5 hours)
+
+- Introduction (5 mins)
   * Quartz's features
   * Quartz 1.8 vs Quartz 2.0
 - Scheduling Jobs (20 mins)
