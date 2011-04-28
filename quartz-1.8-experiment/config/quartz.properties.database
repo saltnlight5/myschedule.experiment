@@ -17,6 +17,6 @@ org.quartz.scheduler.rmi.registryPort = 1099
 # Persistence Job Store - with Oracle database
 org.quartz.dataSource.quartzDataSource.driver = oracle.jdbc.driver.OracleDriver
 org.quartz.dataSource.quartzDataSource.URL = jdbc:oracle:thin:@localhost:1521:XE
-org.quartz.dataSource.quartzDataSource.user = test
-org.quartz.dataSource.quartzDataSource.password = test123
+org.quartz.dataSource.quartzDataSource.user = quartz
+org.quartz.dataSource.quartzDataSource.password = quartz123
 org.quartz.dataSource.quartzDataSource.maxConnections = 2
