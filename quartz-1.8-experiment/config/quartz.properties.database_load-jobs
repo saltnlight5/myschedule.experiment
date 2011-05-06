@@ -17,3 +17,11 @@ org.quartz.dataSource.quartzDataSource.URL = jdbc:oracle:thin:@localhost:1521:XE
 org.quartz.dataSource.quartzDataSource.user = quartz
 org.quartz.dataSource.quartzDataSource.password = quartz123
 org.quartz.dataSource.quartzDataSource.maxConnections = 2
+
+# Configure the Job Initialization Plugin
+# http://www.quartz-scheduler.org/docs/cookbook/JobInitPlugin.html
+org.quartz.plugin.jobInitializer.class = org.quartz.plugins.xml.XMLSchedulingDataProcessorPlugin
+org.quartz.plugin.jobInitializer.fileNames = quartz-jobs_for-spring-server.xml
+org.quartz.plugin.jobInitializer.failOnFileNotFound = true
+org.quartz.plugin.jobInitializer.scanInterval = 0
+org.quartz.plugin.jobInitializer.wrapInUserTransaction = false

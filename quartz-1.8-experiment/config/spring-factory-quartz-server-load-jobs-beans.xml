@@ -16,6 +16,10 @@
 		<property name="quartzProperties">
 			<util:properties location="${config:classpath:quartz.properties.database}"></util:properties>
 		</property>
+		<!-- This is not a Spring resource location, but Quartz interpreted file system string location,
+		which can be a resource name in classpath -->
+		<property name="jobSchedulingDataLocation" value="quartz-jobs_for-spring-server.xml"></property>
+		
 	</bean>
 
 </beans>
