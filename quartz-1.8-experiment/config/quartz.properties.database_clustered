@@ -8,12 +8,13 @@ org.quartz.jobStore.class = org.quartz.impl.jdbcjobstore.JobStoreTX
 org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.oracle.OracleDelegate
 org.quartz.jobStore.dataSource = quartzDataSource
 org.quartz.jobStore.tablePrefix = QRTZ_
+org.quartz.jobStore.isClustered = true
 org.quartz.threadPool.class = org.quartz.simpl.SimpleThreadPool
 org.quartz.threadPool.threadCount = 2
 
 # Persistence Job Store - with Oracle database
 org.quartz.dataSource.quartzDataSource.driver = oracle.jdbc.driver.OracleDriver
 org.quartz.dataSource.quartzDataSource.URL = jdbc:oracle:thin:@localhost:1521:XE
-org.quartz.dataSource.quartzDataSource.user = quartz2
-org.quartz.dataSource.quartzDataSource.password = quartz2123
+org.quartz.dataSource.quartzDataSource.user = quartz
+org.quartz.dataSource.quartzDataSource.password = quartz123
 org.quartz.dataSource.quartzDataSource.maxConnections = 2
