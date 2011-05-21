@@ -44,10 +44,11 @@ RUN_JAVA_OPTS=${RUN_JAVA_OPTS:=}           # Java options (-Xmx512m -XX:MaxPermS
 RUN_JAVA_DEBUG=${RUN_JAVA_DEBUG:=}         # If not empty, print the full java command line before executing it.
 RUN_JAVA_NO_PARSE=${RUN_JAVA_NO_PARSE:=}   # If not empty, skip the auto parsing of -D and -cp options from script arguments.
 RUN_JAVA_NO_AUTOCP=${RUN_JAVA_NO_AUTOCP:=} # If not empty, do not auto setup Java classpath
+RUN_JAVA_DRY=${RUN_JAVA_DRY:=}             # If not empty, do not exec Java command, but just print
 
 # Provide Windows directory conversion
-JAVA_HOME_WIN=$(cygpath -w -a $JAVA_HOME)
-APP_DIR_WIN=$(cygpath -w -a $APP_DIR)
+JAVA_HOME_WIN=$(cygpath -w -a "$JAVA_HOME")
+APP_DIR_WIN=$(cygpath -w -a "$APP_DIR")
 
 # Define where is the java executable is
 JAVA_CMD=java
@@ -119,18 +120,22 @@ if [ -z "$RUN_JAVA_NO_PARSE" ]; then
 	done
 		
 	# Display full Java command.
-	if [ -n "$RUN_JAVA_DEBUG" ]; then
-		echo $JAVA_CMD $RUN_JAVA_OPTS -cp "$RUN_JAVA_CP" "${NEW_ARGS[@]}"
+	if [ -n "$RUN_JAVA_DEBUG" ] || [ -n "$RUN_JAVA_DRY" ]; then
+		echo "$JAVA_CMD" $RUN_JAVA_OPTS -cp "$RUN_JAVA_CP" "${NEW_ARGS[@]}"
 	fi
 	
 	# Run Java Main class using parsed variables
-	"$JAVA_CMD" $RUN_JAVA_OPTS -cp "$RUN_JAVA_CP" "${NEW_ARGS[@]}"
+	if [ -z "$RUN_JAVA_DRY" ]; then
+		"$JAVA_CMD" $RUN_JAVA_OPTS -cp "$RUN_JAVA_CP" "${NEW_ARGS[@]}"
+	fi
 else
 	# Display full Java command.
-	if [ -n "$RUN_JAVA_DEBUG" ]; then
-		echo $JAVA_CMD $RUN_JAVA_OPTS -cp "$RUN_JAVA_CP" "$@"
+	if [ -n "$RUN_JAVA_DEBUG" ] || [ -n "$RUN_JAVA_DRY" ]; then
+		echo "$JAVA_CMD" $RUN_JAVA_OPTS -cp "$RUN_JAVA_CP" "$@"
 	fi
 	
 	# Run Java Main class
-	"$JAVA_CMD" $RUN_JAVA_OPTS -cp "$RUN_JAVA_CP" "$@"
+	if [ -z "$RUN_JAVA_DRY" ]; then
+		"$JAVA_CMD" $RUN_JAVA_OPTS -cp "$RUN_JAVA_CP" "$@"
+	fi
 fi

@@ -14,7 +14,7 @@
 	<bean id="quartzScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="autoStartup" value="true"></property>
 		<property name="quartzProperties">
-			<util:properties location="${config:classpath:quartz.properties.database}"></util:properties>
+			<util:properties location="${config:classpath:quartz.properties}"></util:properties>
 		</property>
 	</bean>
 
