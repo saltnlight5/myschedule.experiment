@@ -13,7 +13,7 @@
 	<!-- Create a plain standalone quartz scheduler instance from a factory. -->
 	<bean id="quartzSchedulerFactory" class="org.quartz.impl.StdSchedulerFactory">
 		<constructor-arg>
-			<util:properties location="${classpath:quartz.properties.rmi-server}"></util:properties>
+			<util:properties location="${config:classpath:quartz.properties.rmi-server}"></util:properties>
 		</constructor-arg>
 	</bean>
 	<bean id="quartzScheduler" class="org.quartz.Scheduler" 
