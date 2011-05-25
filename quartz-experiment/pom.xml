@@ -112,6 +112,12 @@
 	      <scope>runtime</scope>
 	    </dependency>
 	    
+		<!-- Experiment scheduler with Groovy scripting -->
+	    <dependency>
+	      <groupId>org.codehaus.groovy</groupId>
+	      <artifactId>groovy</artifactId>
+	      <version>1.8.0</version>
+	    </dependency>
 	</dependencies>
 
 </project>
