@@ -7,14 +7,7 @@ Quartz Presentation (1.5 hours)
 - Tips and gotchas when working with quartz API (5 mins)
 - QA session (25 mins)  
 
-
-
-
-
-
-
-
-Quartz Presentation (1.5 hours)
+Detailed Outlines
 
 - Introduction (5 mins)
   * Quartz's features
