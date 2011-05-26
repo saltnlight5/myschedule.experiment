@@ -1,14 +1,14 @@
 package quartz.experiment;
 
-/** QuartzExample
- *
- * @author Zemian Deng
- */
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SimpleTrigger;
 import org.quartz.impl.StdSchedulerFactory;
 
+/** QuartzExample
+ *
+ * @author Zemian Deng
+ */
 public class QuartzExample {
   public static void main(String[] args) throws Exception {
     Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
