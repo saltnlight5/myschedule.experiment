@@ -17,8 +17,12 @@
 		<property name="password" value="${org.quartz.dataSource.quartzDataSource.password}"/>
 	</bean>
 	
-	<!-- Create a Quartz scheduler using Spring FactoryBean. -->
+	<!-- Create a Quartz scheduler using Spring FactoryBean.
+	
+	We will not use default Spring's version. See javadoc in SchedulerExtFactoryBean for details.
 	<bean id="quartzScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+	-->
+	<bean id="quartzScheduler" class="quartz.experiment.spring.SchedulerExtFactoryBean">
 		<property name="autoStartup" value="true"></property>
 		<property name="quartzProperties">
 			<util:properties location="${config:classpath:quartz.properties.database}"></util:properties>
@@ -26,8 +30,8 @@
 		<property name="dataSource" ref="dataSource"></property>
 		
 		<!-- This is not a Spring resource location, but Quartz interpreted file system string location,
-		which can be a resource name in classpath -->
-		<property name="jobSchedulingDataLocation" value="spring/quartz-jobs2.xml"></property>
+		which relative to CWD where spring process started. -->
+		<property name="jobSchedulingDataLocation" value="config/spring/quartz-jobs2.xml"></property>
 	</bean>
 
 </beans>
