@@ -10,11 +10,13 @@
 	
 	<context:property-placeholder location="${config:classpath:quartz.properties.database}"/>
 	
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	<!--  Commons DBCP pooling DS -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="${org.quartz.dataSource.quartzDataSource.driver}"/>
 		<property name="url" value="${org.quartz.dataSource.quartzDataSource.URL}"/>
 		<property name="username" value="${org.quartz.dataSource.quartzDataSource.user}"/>
 		<property name="password" value="${org.quartz.dataSource.quartzDataSource.password}"/>
+		<property name="maxActive" value="${org.quartz.dataSource.quartzDataSource.maxConnections}"/>
 	</bean>
 	
 	<!-- Create a Quartz scheduler using Spring FactoryBean.

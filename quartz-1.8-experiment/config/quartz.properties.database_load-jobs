@@ -3,7 +3,7 @@
 
 org.quartz.scheduler.skipUpdateCheck = true
 org.quartz.scheduler.instanceName = QuartzScheduler
-org.quartz.scheduler.instanceId = NON_CLUSTERED
+org.quartz.scheduler.instanceId = AUTO
 org.quartz.jobStore.class = org.quartz.impl.jdbcjobstore.JobStoreTX
 org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.oracle.OracleDelegate
 org.quartz.jobStore.dataSource = quartzDataSource

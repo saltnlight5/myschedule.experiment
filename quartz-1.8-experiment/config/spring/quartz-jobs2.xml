@@ -5,7 +5,7 @@
 
 	<schedule>
 	
-        <!-- A one time job -->
+        <!-- Run a very long job twice. -->
 		<job>
 			<name>my_spring_job1</name>
 			<group>DEFAULT</group>
@@ -17,9 +17,49 @@
 				<group>DEFAULT</group>
 				<job-name>my_spring_job1</job-name>
 				<job-group>DEFAULT</job-group>
-				<repeat-count>0</repeat-count>
-				<repeat-interval>1</repeat-interval>
+				<repeat-count>1</repeat-count>
+				<repeat-interval>5000</repeat-interval>
 			</simple>
+		</trigger>
+		
+		<!-- Run this job every 1.5 sec forever -->
+		<job>
+			<name>my_job1</name>
+			<group>DEFAULT</group>
+			<job-class>quartz.experiment.SimpleJob</job-class>
+		</job>
+		<trigger>
+			<simple>
+				<name>my_job1</name>
+				<group>DEFAULT</group>
+				<job-name>my_job1</job-name>
+				<job-group>DEFAULT</job-group>
+				<repeat-count>-1</repeat-count>
+				<repeat-interval>1500</repeat-interval>
+			</simple>
+		</trigger>
+		
+        <!-- Run this job every night at 4:30 am -->
+		<job>
+			<name>my_job2</name>
+			<group>DEFAULT</group>
+			<description>Just a example.</description>
+			<job-class>quartz.experiment.SimpleJob</job-class>
+			<job-data-map>
+				<entry>
+					<key>color</key>
+					<value>RED</value>
+				</entry>
+			</job-data-map>
+		</job>
+		<trigger>
+			<cron>
+				<name>my_job2</name>
+				<group>DEFAULT</group>
+				<job-name>my_job2</job-name>
+				<job-group>DEFAULT</job-group>
+				<cron-expression>0 30 4 * * ?</cron-expression>
+			</cron>
 		</trigger>
 		
 	</schedule>
