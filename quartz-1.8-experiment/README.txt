@@ -20,3 +20,9 @@ $ sqlplus quartz/quartz123 < config/tables_oracle.sql
 $ bin/run-spring.sh -Dconfig=config/quartz.properties.database_clustered config/spring/spring-quartz-with-datasource.xml
 # On terminal#2
 $ bin/run-spring.sh -Dconfig=config/quartz.properties.database_clustered config/spring/spring-quartz-with-scheduling-jobs.xml 
+
+== BUGS ==
+4:38 PM 06/05/2011
+When starting quartz that failed a plugin, why the exception (validation failed) only logged but doesn't throw to scheduler.start()?
+Eg: use a wrong jobs file in the following
+bin/run-quartz.sh config/quartz.properties.load-jobs

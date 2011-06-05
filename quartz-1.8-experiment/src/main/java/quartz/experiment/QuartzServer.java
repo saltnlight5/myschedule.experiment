@@ -26,9 +26,9 @@ public class QuartzServer {
 		registerShutdown();
 		try {
 			logger.info("Starting scheduler.");
-			scheduler.start();
+			scheduler.start();	
 		} catch (SchedulerException e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException("Failed to start scheduler.", e);
 		}
 	}
 	
