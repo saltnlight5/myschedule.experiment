@@ -26,3 +26,9 @@ $ bin/run-spring.sh -Dconfig=config/quartz.properties.database_clustered config/
 When starting quartz that failed a plugin, why the exception (validation failed) only logged but doesn't throw to scheduler.start()?
 Eg: use a wrong jobs file in the following
 bin/run-quartz.sh config/quartz.properties.load-jobs
+
+== First time Maven setup ==
+You will need the Oracle XE jdbc driver.
+1. Download it from http://www.oracle.com/technetwork/database/features/jdbc/index-091264.html
+2. Install it to your local maven repository using this command:
+	$ mvn install:install-file -Dpackaging=jar -DgroupId=com.oracle -DartifactId=ojdbc14 -Dversion=10.2.0.1.0.XE -Dfile="ojdbc14.jar"
