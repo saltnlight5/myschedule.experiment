@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2007-2011  The Bank of New York Mellon, All Rights Reserved.
- */
-
 package quartz.experiment;
 
 import java.util.ArrayList;
@@ -10,11 +6,6 @@ import java.util.List;
 
 import org.quartz.Trigger;
 
-/**
- * Comment for TriggerHelper.
- *
- * @author Zemian Deng
- */
 public class TriggerHelper
 {
 	public static List<Date> getNextFireTimes(Trigger trigger, int maxCount) {
