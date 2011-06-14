@@ -122,6 +122,8 @@
 			<artifactId>commons-dbcp</artifactId>
 			<version>1.4</version>
 		</dependency>
+		
+		<!-- Oracle JDBC 
 		<dependency>
 			<groupId>org.quartz-scheduler</groupId>
 			<artifactId>quartz-oracle</artifactId>
@@ -132,7 +134,15 @@
 			<artifactId>ojdbc14</artifactId>
 			<version>10.2.0.1.0.XE</version>
 		</dependency>
-
+		-->
+		
+		<!-- MySQl JDBC -->
+		<dependency>
+		    <groupId>mysql</groupId>
+		    <artifactId>mysql-connector-java</artifactId>
+		    <version>5.1.16</version>
+		</dependency>
+		
 	</dependencies>
 
 </project>

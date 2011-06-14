@@ -194,7 +194,7 @@ public class SchedulerExtFactoryBean extends SchedulerFactoryBean {
 	 */
 	protected boolean addJobToScheduler(JobDetail jobDetail) throws SchedulerException {
 		if (this.overwriteExistingJobs ||
-		    getScheduler().getJobDetail(jobDetail.getName(), jobDetail.getGroup()) == null) {
+		    getScheduler().getJobDetail(jobDetail.getKey()) == null) {
 			getScheduler().addJob(jobDetail, true);
 			return true;
 		}
@@ -207,7 +207,7 @@ public class SchedulerExtFactoryBean extends SchedulerFactoryBean {
 	 * Over shadow the parent method so we have access in this class.
 	 */
 	protected boolean addTriggerToScheduler(Trigger trigger) throws SchedulerException {
-		boolean triggerExists = (getScheduler().getTrigger(trigger.getName(), trigger.getGroup()) != null);
+		boolean triggerExists = (getScheduler().getTrigger(trigger.getKey()) != null);
 		if (!triggerExists || this.overwriteExistingJobs) {
 			// Check if the Trigger is aware of an associated JobDetail.
 			if (trigger instanceof JobDetailAwareTrigger) {
@@ -227,12 +227,12 @@ public class SchedulerExtFactoryBean extends SchedulerFactoryBean {
 								ex.getMessage() + " - can safely be ignored");
 					}
 					if (this.overwriteExistingJobs) {
-						getScheduler().rescheduleJob(trigger.getName(), trigger.getGroup(), trigger);
+						getScheduler().rescheduleJob(trigger.getKey(), trigger);
 					}
 				}
 			}
 			else {
-				getScheduler().rescheduleJob(trigger.getName(), trigger.getGroup(), trigger);
+				getScheduler().rescheduleJob(trigger.getKey(), trigger);
 			}
 			return true;
 		}

@@ -23,12 +23,21 @@
 		<property name="acquireRetryDelay" value="1000"/>
     </bean> -->
 	
-	<!-- Create a Quartz scheduler using Spring FactoryBean. -->
+	<!-- Create a Quartz scheduler using Spring FactoryBean.
 	<bean id="quartzScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="autoStartup" value="true"></property>
 		<property name="quartzProperties">
 			<util:properties location="${config:classpath:quartz.properties}"></util:properties>
 		</property>
+	</bean> 
+	-->
+	
+	<!-- Create a Quartz scheduler using Custom extension of Spring FactoryBean. -->
+	<bean id="quartzScheduler" class="quartz.experiment.spring.SchedulerExtFactoryBean">
+		<property name="autoStartup" value="true"></property>
+		<property name="quartzProperties">
+			<util:properties location="${config:classpath:quartz.properties}"></util:properties>
+		</property>
 	</bean>
-
+	
 </beans>
