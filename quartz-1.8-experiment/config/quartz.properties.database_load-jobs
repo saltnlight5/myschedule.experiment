@@ -1,4 +1,4 @@
-# A Quartz Scheduler configuration with DataStore
+# A Quartz Scheduler configuration with database and JobSchedulingData xml plugin.
 # See http://www.quartz-scheduler.org/docs/configuration
 
 org.quartz.scheduler.skipUpdateCheck = true

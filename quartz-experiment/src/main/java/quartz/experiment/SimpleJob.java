@@ -1,6 +1,9 @@
 package quartz.experiment;
 
+import static org.quartz.JobBuilder.newJob;
+
 import org.quartz.Job;
+import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
@@ -24,4 +27,10 @@ public class SimpleJob implements Job {
 		logger.info("Job is running with context: " + context);
 	}
 
+	
+	public static JobDetail createJobDetail(String name) {
+		return newJob(SimpleJob.class)
+	        .withIdentity(name)
+	        .build();
+	}
 }

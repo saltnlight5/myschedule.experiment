@@ -1,0 +1,8 @@
+# A simple default Quartz Scheduler configuration
+# See http://www.quartz-scheduler.org/docs/configuration
+
+org.quartz.scheduler.instanceName = BasicScheduler
+org.quartz.scheduler.instanceId = NODE1
+org.quartz.scheduler.skipUpdateCheck = true
+org.quartz.threadPool.class = org.quartz.simpl.SimpleThreadPool
+org.quartz.threadPool.threadCount = 1

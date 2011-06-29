@@ -1,4 +1,4 @@
-# A simple default Quartz Scheduler configuration
+# A Quartz Scheduler configuration with JobSchedulingData xml plugin.
 # See http://www.quartz-scheduler.org/docs/configuration
 
 org.quartz.scheduler.skipUpdateCheck = true
