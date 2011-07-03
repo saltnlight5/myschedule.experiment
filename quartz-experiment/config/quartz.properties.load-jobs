@@ -3,7 +3,7 @@
 
 org.quartz.scheduler.skipUpdateCheck = true
 org.quartz.threadPool.class = org.quartz.simpl.SimpleThreadPool
-org.quartz.threadPool.threadCount = 2
+org.quartz.threadPool.threadCount = 5
 
 # Configure the Job Initialization Plugin
 # http://www.quartz-scheduler.org/docs/cookbook/JobInitPlugin.html

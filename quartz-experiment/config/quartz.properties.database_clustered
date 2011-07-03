@@ -18,4 +18,4 @@ org.quartz.dataSource.quartzDataSource.driver = com.mysql.jdbc.Driver
 org.quartz.dataSource.quartzDataSource.URL = jdbc:mysql://localhost:3306/quartz
 org.quartz.dataSource.quartzDataSource.user = quartz
 org.quartz.dataSource.quartzDataSource.password = quartz123
-org.quartz.dataSource.quartzDataSource.maxConnections = 5
+org.quartz.dataSource.quartzDataSource.maxConnections = 9
