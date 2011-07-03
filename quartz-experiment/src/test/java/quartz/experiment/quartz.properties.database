@@ -9,11 +9,11 @@ org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.StdJDBCDe
 org.quartz.jobStore.dataSource = quartzDataSource
 org.quartz.jobStore.tablePrefix = QRTZ_
 org.quartz.threadPool.class = org.quartz.simpl.SimpleThreadPool
-org.quartz.threadPool.threadCount = 1
+org.quartz.threadPool.threadCount = 5
 
-# Persistence Job Store - with Oracle database
+# Persistence Job Store - with database
 org.quartz.dataSource.quartzDataSource.driver = com.mysql.jdbc.Driver
 org.quartz.dataSource.quartzDataSource.URL = jdbc:mysql://localhost:3306/quartz
 org.quartz.dataSource.quartzDataSource.user = quartz
 org.quartz.dataSource.quartzDataSource.password = quartz123
-org.quartz.dataSource.quartzDataSource.maxConnections = 1
+org.quartz.dataSource.quartzDataSource.maxConnections = 8
