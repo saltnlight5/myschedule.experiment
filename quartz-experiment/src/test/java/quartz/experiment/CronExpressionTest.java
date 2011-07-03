@@ -19,6 +19,12 @@ public class CronExpressionTest {
 	private static Logger logger = LoggerFactory.getLogger(CronExpressionTest.class);
 	
 	@Test
+	public void testShowStartingTime() throws Exception {
+		logger.info("Current time: " + new Date());
+		showCronFireTimes("0/5 * * * * ?");
+	}
+	
+	@Test
 	public void testNthTheWeekInAMonth() throws Exception {
 		showCronFireTimes("0 0 0 ? 11 5#4 *");    // every 4th THU in Nov
 		showCronFireTimes("0 0 0 ? Nov THU#4 *"); // same
