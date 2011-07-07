@@ -10,7 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** 
- * SleepJob
+ * SleepJob - simulate a long running job. Use the jobDataMap's "sleepTime" to set the time
+ * in milliseconds to pause the job.
  *
  * @author Zemian Deng
  */
@@ -20,13 +21,16 @@ public class SleepJob implements Job {
 		
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
-		long sleepTime = context.getJobDetail().getJobDataMap().getLong(SLEEP_TIME_PARAM);
-		logger.info("About to sleep " + sleepTime + " ms.");
+		JobDetail job = context.getJobDetail();
+		String jobName = job.getKey().getName();
+		long sleepTime = job.getJobDataMap().getLong(SLEEP_TIME_PARAM);
+		logger.info(jobName + " is about to sleep for " + sleepTime + " ms.");
 		try {
 			Thread.sleep(sleepTime);
 		} catch (InterruptedException e) {
 			throw new JobExecutionException("Failed to sleep " + sleepTime + " ms.", e);
 		}
+		logger.info(jobName + " is done.");
 	}
 	
 	public static JobDetail createJobDetail(String name, long sleepTime) {
