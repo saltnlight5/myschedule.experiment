@@ -6,8 +6,7 @@ import java.util.List;
 
 import org.quartz.Trigger;
 
-public class TriggerHelper
-{
+public class TriggerHelper {
 	public static List<Date> getNextFireTimes(Trigger trigger, int maxCount) {
 		List<Date> result = new ArrayList<Date>(maxCount);
 		Date nextDate = new Date();
