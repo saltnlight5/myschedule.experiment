@@ -2,6 +2,8 @@ package quartz.experiment;
 
 import static org.quartz.JobBuilder.newJob;
 
+import java.util.Date;
+
 import org.quartz.Job;
 import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
@@ -30,7 +32,8 @@ public class SleepJob implements Job {
 		} catch (InterruptedException e) {
 			throw new JobExecutionException("Failed to sleep " + sleepTime + " ms.", e);
 		}
-		logger.info(jobName + " is done.");
+		Date nextFireTiem = context.getTrigger().getNextFireTime();
+		logger.info(jobName + " is done. Next fire time: " + nextFireTiem);
 	}
 	
 	public static JobDetail createJobDetail(String name, long sleepTime) {

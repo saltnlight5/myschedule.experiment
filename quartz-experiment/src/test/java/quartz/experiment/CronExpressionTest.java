@@ -1,5 +1,8 @@
 package quartz.experiment;
 
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertThat;
+
 import java.util.Date;
 
 import org.junit.Test;
@@ -17,6 +20,11 @@ import org.slf4j.LoggerFactory;
 public class CronExpressionTest {
 
 	private static Logger logger = LoggerFactory.getLogger(CronExpressionTest.class);
+	
+	@Test
+	public void testSample() throws Exception {
+		
+	}
 
 	@Test
 	public void testShowStartingTime() throws Exception {

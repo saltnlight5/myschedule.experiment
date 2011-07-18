@@ -13,7 +13,8 @@ org.quartz.plugin.jobInitializer.class = org.quartz.plugins.xml.XMLSchedulingDat
 
 # TODO: how do we reference system properties value here?
 #org.quartz.plugin.jobInitializer.fileNames = $@jobs
-org.quartz.plugin.jobInitializer.fileNames = C:/projects/myschedule/src/main/webapp/WEB-INF/spring/scheduler/quartz-jobs.xml
+#org.quartz.plugin.jobInitializer.fileNames = C:/projects/myschedule/src/main/webapp/WEB-INF/spring/scheduler/quartz-jobs.xml
+org.quartz.plugin.jobInitializer.fileNames = C:/temp/test.xml,C:/temp/test2.xml
 
 org.quartz.plugin.jobInitializer.failOnFileNotFound = true
 org.quartz.plugin.jobInitializer.scanInterval = 0

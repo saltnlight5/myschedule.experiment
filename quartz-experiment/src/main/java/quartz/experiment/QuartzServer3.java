@@ -10,9 +10,9 @@ public class QuartzServer3 extends QuartzServer {
 	
 	@Override
 	protected boolean beforeSchedulerStart() {
-		logger.info("Modifying and replacing job1");
-		JobDetail job = SleepJob.createJobDetail("job1", 3000);
 		try {
+			logger.info("Modifying and replacing job1 jobdetail only");
+			JobDetail job = SleepJob.createJobDetail("job1", 3500);
 			scheduler.addJob(job, true);
 		} catch (SchedulerException e) {
 			throw new RuntimeException(e);

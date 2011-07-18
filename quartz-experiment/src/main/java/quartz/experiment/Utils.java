@@ -3,7 +3,9 @@ package quartz.experiment;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -14,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +28,31 @@ import org.slf4j.LoggerFactory;
 public class Utils {
 	
 	private static Logger logger = LoggerFactory.getLogger(Utils.class);
+	
+	@SuppressWarnings("unchecked")
+	public static <T> T createRecorderProxy(Class<T> interfaceType) {
+		ClassLoader loader = interfaceType.getClassLoader();
+		Class<T>[] interfaces = new Class[] { interfaceType };
+		InvocationHandler handler = new MethodsLoggerHandler();
+		return (T)Proxy.newProxyInstance(loader, interfaces , handler);
+	}
+	
+	public static class MethodsLoggerHandler implements InvocationHandler {
+		
+		protected Logger logger = LoggerFactory.getLogger(getClass());
+		
+		public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+			logger.info("Method Invoked: " + method);
+			
+			Class<?> retType = method.getReturnType();
+			Object ret = null;
+			if (!retType.equals(Void.TYPE)) {
+				ret = Mockito.mock(retType); 
+			}
+			return ret;
+		}
+		
+	}
 	
 	public static String propsToText(Properties configProps) {
 		StringWriter sWriter = new StringWriter();

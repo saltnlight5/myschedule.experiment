@@ -35,15 +35,21 @@ public class QuartzServer {
 	}
 	
 	public void run() {
-		if (scheduler == null)
+		if (scheduler == null) {
 			init();
-		registerShutdown();
+			logger.info("Init.");
+		}
 		try {
 			boolean cont = beforeSchedulerStart();
 			if (cont) {
+				registerShutdown();
 				logger.info("Starting scheduler.");
 				scheduler.start();
+				logger.info("Started.");
 				afterSchedulerStart();
+			} else {
+				logger.info("Shutting down scheduler.");
+				scheduler.shutdown(true);
 			}
 		} catch (SchedulerException e) {
 			throw new RuntimeException(e);
@@ -53,9 +59,10 @@ public class QuartzServer {
 	protected void registerShutdown() {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override public void run() {
-				logger.info("Shutting down scheduler.");
 				try {
+					logger.info("Shutting down scheduler and wait for job to complete.");
 					scheduler.shutdown(true);
+					logger.info("done.");
 				} catch (SchedulerException e) {
 					throw new RuntimeException(e);
 				}

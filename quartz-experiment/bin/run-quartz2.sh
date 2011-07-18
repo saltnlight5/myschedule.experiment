@@ -1,3 +1,3 @@
 #!/usr/bin/bash
 DIR=$(dirname $0)
-$DIR/run-java quartz.experiment.QuartzServer2 -Dconfig=$1 "$@"
+$DIR/run-java quartz.experiment.QuartzServerClean -Dconfig=$1 "$@"

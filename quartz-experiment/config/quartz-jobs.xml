@@ -26,7 +26,7 @@
 		<job>
 			<name>my_job2</name>
 			<group>DEFAULT</group>
-			<description>Just a example.</description>
+			<description>Just an example.</description>
 			<job-class>quartz.experiment.SimpleJob</job-class>
 			<job-data-map>
 				<entry>

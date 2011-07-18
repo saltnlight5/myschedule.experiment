@@ -10,9 +10,9 @@ public class QuartzServer2 extends QuartzServer {
 	@Override
 	protected boolean beforeSchedulerStart() {
 		logger.info("Adding 3 sleepy jobs");
-		createJob("job1", 15000, 60000, 30000);
-		createJob("job2", 30000, 60000, 30000);
-		createJob("job3", 60000, 60000, 30000);
+		createJob("job1", 5000, 20000, 10000);
+		createJob("job2", 10000, 20000, 10000);
+		createJob("job3", 15000, 20000, 10000);
 		
 		return true; // start scheduler.
 	}
