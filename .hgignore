@@ -1,8 +1,4 @@
-syntax: glob
-*.bak
-tmp/*
-log/*
-**/target/*
-**/.settings/*
-**/.project
-**/.classpath
+target/
+\.settings/
+\.classpath
+\.project
