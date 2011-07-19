@@ -43,27 +43,27 @@
 			<version>1.6.1</version>
 			<scope>runtime</scope>
 		</dependency>
-		
+
 		<!-- Testing libraries -->
-	    <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-library</artifactId>
-            <version>1.2</version>
-            <scope>test</scope>
-	    </dependency>
-	    <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>1.8.5</version>
-            <scope>test</scope>
-	    </dependency>
-	    <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.8.2</version>
-            <scope>test</scope>
-	    </dependency>
-		
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-library</artifactId>
+			<version>1.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>1.8.5</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.2</version>
+			<scope>test</scope>
+		</dependency>
+
 		<!-- Spring libraries 
 		We would use jcl-over-slf4j instead of common-logging.
 		-->
@@ -128,7 +128,7 @@
 			<artifactId>commons-dbcp</artifactId>
 			<version>1.4</version>
 		</dependency>
-		
+
 		<!-- Oracle JDBC 
 		<dependency>
 			<groupId>org.quartz-scheduler</groupId>
@@ -141,14 +141,14 @@
 			<version>10.2.0.1.0.XE</version>
 		</dependency>
 		-->
-		
+
 		<!-- MySQl JDBC -->
 		<dependency>
-		    <groupId>mysql</groupId>
-		    <artifactId>mysql-connector-java</artifactId>
-		    <version>5.1.16</version>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.16</version>
 		</dependency>
-		
+
 	</dependencies>
 
 </project>
