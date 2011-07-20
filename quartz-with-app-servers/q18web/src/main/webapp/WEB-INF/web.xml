@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+	<description>Quartz Demo Webapp</description>
+	
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+	
+	<!-- User may use JAVA_OPTS=-Dorg.quartz.properties=file:///c:/temp/quartz1.properties
+	<context-param>
+	    <param-name>quartz:config-file</param-name>
+	    <param-value>quartz.properties</param-value>
+	</context-param>
+	-->
+	<context-param>
+	    <param-name>quartz:shutdown-on-unload</param-name>
+	    <param-value>true</param-value>
+	</context-param>
+	<context-param>
+	    <param-name>quartz:start-on-load</param-name>
+	    <param-value>true</param-value>
+	</context-param>
+	
+	<listener>
+	    <listener-class>
+	        org.quartz.ee.servlet.QuartzInitializerListener
+	    </listener-class>
+	</listener>
+	
+</web-app>
