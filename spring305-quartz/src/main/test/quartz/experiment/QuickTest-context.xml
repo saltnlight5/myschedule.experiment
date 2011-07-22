@@ -12,11 +12,6 @@
 	<bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="schedulerName" value="SpringQuartzScheduler"/>
 		<property name="autoStartup" value="false"/>
-		<property name="quartzProperties">
-			<props>
-				<prop key="org.terracotta.quartz.skipUpdateCheck">true</prop>
-			</props>
-		</property>
 	</bean>
 
 </beans>

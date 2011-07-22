@@ -2,12 +2,20 @@ package quartz.experiment;
 
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
+/**
+ * In order for Spring managed transaction to roll back any Quartz operations, you must add the
+ * "rollbackFor" attribute of SchedulerException type! Or else your transaction will continue
+ * to commit for scheduler, while other JPA/Hibernate tx are automatically managed properly.
+ *
+ * @author Zemian Deng
+ */
+@Transactional(rollbackFor={SchedulerException.class})
 public class MySchedulerServiceImpl implements MySchedulerService {	
 	
 	protected Logger logger = LoggerFactory.getLogger(getClass());

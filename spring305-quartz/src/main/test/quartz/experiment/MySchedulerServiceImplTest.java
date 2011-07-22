@@ -7,7 +7,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations="MySchedulerServiceImpl2Test-context.xml")
+@ContextConfiguration(locations="MySchedulerServiceImplTest-context.xml")
 public class MySchedulerServiceImplTest {
 	@Autowired
 	protected MySchedulerService mySchedulerService;

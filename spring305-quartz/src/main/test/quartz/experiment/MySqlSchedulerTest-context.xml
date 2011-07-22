@@ -23,11 +23,6 @@
 		<property name="schedulerName" value="SpringQuartzScheduler"/>
 		<property name="autoStartup" value="false"/>
 		<property name="dataSource" ref="dataSource"/>
-		<property name="quartzProperties">
-			<props>
-				<prop key="org.terracotta.quartz.skipUpdateCheck">true</prop>
-			</props>
-		</property>
 	</bean>
 
 </beans>

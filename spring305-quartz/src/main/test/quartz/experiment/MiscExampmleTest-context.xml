@@ -46,10 +46,37 @@
 		<property name="dataSource" ref="dataSource"/>
 		<property name="quartzProperties">
 			<props>
-				<!-- This will not work in quartz 1.7.3 -->
+				<prop key="org.quartz.scheduler.classLoadHelper.class">org.quartz.simpl.CascadingClassLoadHelper</prop>
+				
+				<!-- This prop will not work unless it's quartz-1.8.x or above! -->
 				<prop key="org.quartz.scheduler.skipUpdateCheck">true</prop>
-				<!-- In Quartz 1.7.3, this is a bug that even if checker is disabled, the timer object is still on, just do nothing! -->
+				
+				<!-- In Quartz 1.7.3, this is a bug that you can not disable updateCheck entirely.
+				The mostly you can do is set System Properties "org.terracotta.quartz.skipUpdateCheck"
+				to true. This will only skip the check, but the timer task object is still created. 
+				
+				Note that "org.terracotta.quartz.skipUpdateCheck" is sys prop, and NOT the same as 
+				quartz properties! Setting this value here will not do anything!
 				<prop key="org.terracotta.quartz.skipUpdateCheck">true</prop>
+				-->
+			</props>
+		</property>
+	</bean>
+	
+	
+	    
+    <!-- Quartz Scheduler -->
+	<bean id="scheduler2" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="schedulerName" value="SpringQuartzScheduler"/>
+		<property name="autoStartup" value="false"/>
+		<property name="dataSource" ref="dataSource"/>
+		<!-- This tx manager only used during registering job/trigger with this bean, not programmatically with scheduler operations. -->
+		<property name="transactionManager" ref="transactionManager"/>
+		<property name="quartzProperties">
+			<props>
+				<prop key="org.terracotta.quartz.skipUpdateCheck">true</prop>
+				<!-- Some jdbc driver might need this.
+				<prop key="org.quartz.jobStore.dontSetAutoCommitFalse">true</prop> -->
 			</props>
 		</property>
 	</bean>
