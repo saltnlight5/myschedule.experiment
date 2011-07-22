@@ -1,0 +1,9 @@
+8:46 AM 07/21/2011
+>>> JobStoreSupport has two types of getConnection(), one managed, and one is non-managed.
+* The non-managed conn is used in acquireNextTriggers() and triggersFired(), which are used only in QuartzSchedulerThread#run().
+* When using JobStoreTX, the single DS will be used for both types of conn.
+* When using JobStoreCMT, it requires two DS setup, one XA DS, and one Non-XA DS (non-managed).
+* The managed conn (DS) are used by any other Scheduler methods that manage the job data (schedule, addJob, etc).
+  See JobStoreSupport#executeInLock
+* There are many read-only conn methods that do not require locks from the managed conn.
+  See JobStoreSupport#executeWithoutLock

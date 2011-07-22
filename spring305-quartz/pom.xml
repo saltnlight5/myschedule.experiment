@@ -125,11 +125,11 @@
 			<scope>runtime</scope>
 		</dependency>
 
-		<!-- Quartz Oracle and JDBC Driver
+		<!-- Quartz Oracle and JDBC Driver (there is no quartz-oracle-1.7.3)
 		<dependency>
 			<groupId>org.quartz-scheduler</groupId>
 			<artifactId>quartz-oracle</artifactId>
-			<version>1.7.3</version>
+			<version>1.7.2</version>
 	      	<scope>runtime</scope>
 		</dependency>
 	    <dependency>
@@ -137,8 +137,7 @@
 			<artifactId>ojdbc5</artifactId>
 			<version>11.2.0</version>
 			<scope>runtime</scope>
-	    </dependency>
-	    -->
+	    </dependency> -->
 
 		<!-- MySql JDBC Driver (Note: there is no extra quartz component is needed with MySql.) -->
 		<dependency>

@@ -32,3 +32,7 @@ You will need the Oracle XE jdbc driver.
 1. Download it from http://www.oracle.com/technetwork/database/features/jdbc/index-091264.html
 2. Install it to your local maven repository using this command:
 	$ mvn install:install-file -Dpackaging=jar -DgroupId=com.oracle -DartifactId=ojdbc14 -Dversion=10.2.0.1.0.XE -Dfile="ojdbc14.jar"
+	
+	
+>>> Verify Mysql Table types (InnoDB)
+show table status where name='qrtz_job_details';

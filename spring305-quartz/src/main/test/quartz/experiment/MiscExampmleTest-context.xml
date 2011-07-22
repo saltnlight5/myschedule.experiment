@@ -17,6 +17,27 @@
 		<property name="maxActive" value="4"/>
 		<property name="minIdle" value="0"/>
 	</bean>
+	
+	<!-- Apache DB pooling DS
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+		<property name="url" value="jdbc:oracle:thin:@localhost:1521:XE"/>
+		<property name="username" value="quartz18"/>
+		<property name="password" value="quartz18123"/>
+		<property name="maxActive" value="4"/>
+		<property name="minIdle" value="0"/>
+	</bean> -->
+    
+	<!-- C3P0 pooling DS
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="driverClass" value="com.mysql.jdbc.Driver"/>
+		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/quartz18"/>
+		<property name="user" value="quartz18"/>
+		<property name="password" value="quartz18123"/>
+		<property name="maxPoolSize" value="4"/>
+		<property name="minPoolSize" value="0"/>
+    </bean> -->
+    
     
     <!-- Quartz Scheduler -->
 	<bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
@@ -25,6 +46,9 @@
 		<property name="dataSource" ref="dataSource"/>
 		<property name="quartzProperties">
 			<props>
+				<!-- This will not work in quartz 1.7.3 -->
+				<prop key="org.quartz.scheduler.skipUpdateCheck">true</prop>
+				<!-- In Quartz 1.7.3, this is a bug that even if checker is disabled, the timer object is still on, just do nothing! -->
 				<prop key="org.terracotta.quartz.skipUpdateCheck">true</prop>
 			</props>
 		</property>
