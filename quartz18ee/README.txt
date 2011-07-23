@@ -1,3 +1,24 @@
+>>> JBoss7 notes
+When creating your own module, the directory structure must match to the "name"
+Eg: 
+$ find /c/apps/jboss-as-7.0.0.Final/modules/org/quartz-scheduler/
+/c/apps/jboss-as-7.0.0.Final/modules/org/quartz-scheduler/
+/c/apps/jboss-as-7.0.0.Final/modules/org/quartz-scheduler/main
+/c/apps/jboss-as-7.0.0.Final/modules/org/quartz-scheduler/main/module.xml
+/c/apps/jboss-as-7.0.0.Final/modules/org/quartz-scheduler/main/quartz-1.8.5.jar
+/c/apps/jboss-as-7.0.0.Final/modules/org/quartz-scheduler/main/quartz-1.8.5.jar.index
+
+$ cat /c/apps/jboss-as-7.0.0.Final/modules/org/quartz-scheduler/main/module.xml
+<module xmlns="urn:jboss:module:1.0" name="org.quartz-scheduler">
+    <resources>
+        <resource-root path="quartz-1.8.5.jar"/>
+    </resources>
+
+    <dependencies>
+        <module name="org.slf4j"/>
+    </dependencies>
+</module>
+
 Quartz1.8
 >>> When -Dorg.quartz.properties file is not found, you will get this stacktrace:
 23:08:44,765 ERROR [STDERR] org.quartz.SchedulerException: Properties file: 'quartz2.proeprties' could not be found.

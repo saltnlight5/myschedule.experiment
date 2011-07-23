@@ -28,7 +28,25 @@
 					<target>1.6</target>
 				</configuration>
 			</plugin>
-
+			<!--
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.3.1</version>
+				<configuration>
+					<archive>
+						<manifestSections>
+							<manifestSection>
+								<name>deng.quartz.quartz18ee-job</name>
+								<manifestEntries>
+									<Dependencies>org.quartz-scheduler</Dependencies>
+								</manifestEntries>
+							</manifestSection>
+						</manifestSections>
+					</archive>
+				</configuration>
+			</plugin>
+			-->
 		</plugins>
 	</build>
 

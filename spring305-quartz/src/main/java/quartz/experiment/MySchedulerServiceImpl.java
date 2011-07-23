@@ -10,8 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * In order for Spring managed transaction to roll back any Quartz operations, you must add the
- * "rollbackFor" attribute of SchedulerException type! Or else your transaction will continue
- * to commit for scheduler, while other JPA/Hibernate tx are automatically managed properly.
+ * "rollbackFor" attribute of SchedulerException type because it's a checked exception! Or else 
+ * your transaction will continue to commit for scheduler. Spring will only auto rollback any 
+ * RuntimeException or Error, but not "checked" exception! Spring wrapper other service 
+ * JPA/Hibernate services to throw RuntimeException already, but not the org.quartz.Scheduler, so
+ * you must declare this manually if you want rollback to work!
+ * 
+ * See also http://forums.terracotta.org/forums/posts/list/2805.page#29348.
  *
  * @author Zemian Deng
  */
