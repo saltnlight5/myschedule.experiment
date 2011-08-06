@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project 
-	xmlns="http://maven.apache.org/POM/4.0.0" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+>
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>deng.quartz</groupId>
-	<artifactId>spring305-quartz-examples</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<artifactId>jboss-quartz-examples</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<properties>
@@ -15,8 +14,9 @@
 	</properties>
 
 	<build>
-
 		<plugins>
+
+			<!-- Ensure to use JDK6 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -26,9 +26,11 @@
 					<target>1.6</target>
 				</configuration>
 			</plugin>
-		</plugins>
 
+		</plugins>
 	</build>
+
+
 
 	<dependencies>
 
@@ -63,48 +65,6 @@
 			<artifactId>junit</artifactId>
 			<version>4.8.2</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>3.0.5.RELEASE</version>
-			<scope>test</scope>
-		</dependency>
-
-		<!-- Spring development libraries 
-		We would use jcl-over-slf4j instead of common-logging.
-		-->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-			<version>3.0.5.RELEASE</version>
-			<exclusions>
-				<exclusion>
-					<groupId>commons-logging</groupId>
-					<artifactId>commons-logging</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-			<version>1.6.1</version>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context-support</artifactId>
-			<version>3.0.5.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-tx</artifactId>
-			<version>3.0.5.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-jdbc</artifactId>
-			<version>3.0.5.RELEASE</version>
 		</dependency>
 
 		<!-- Quartz library
@@ -163,9 +123,103 @@
 		<dependency>
 			<groupId>org.codehaus.groovy</groupId>
 			<artifactId>groovy</artifactId>
-			<version>1.8.0</version>
+			<version>1.8.1</version>
+		</dependency> -->
+
+		<!-- Java EE libraries -->
+		<dependency>
+			<groupId>javax.activation</groupId>
+			<artifactId>activation</artifactId>
+			<version>1.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.transaction</groupId>
+			<artifactId>jta</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.jms</groupId>
+			<artifactId>jms</artifactId>
+			<version>1.1</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- JBossAS 5		
+		<dependency>
+			<groupId>org.jboss.jbossas</groupId>
+			<artifactId>jboss-as-client</artifactId>
+			<version>5.1.0.GA</version>
+			<type>pom</type>
+            <scope>provided</scope>
+		</dependency> -->
+
+		<!-- JBossAS 6
+		<dependency>
+			<groupId>org.jboss.jbossas</groupId>
+			<artifactId>jboss-as-client</artifactId>
+			<version>6.0.0.Final</version>
+			<type>pom</type>
+			<scope>provided</scope>
+		</dependency> -->
+		
+		<!-- JBossAS6 Individual Libraries -->
+		<dependency>
+			<groupId>org.jboss.naming</groupId>
+			<artifactId>jnp-client</artifactId>
+			<version>5.0.5.Final</version>
+			<scope>provided</scope>
+		</dependency>		
+		<dependency>
+			<groupId>org.hornetq</groupId>
+			<artifactId>hornetq-core</artifactId>
+			<version>2.1.2.Final</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hornetq</groupId>
+			<artifactId>hornetq-jms</artifactId>
+			<version>2.1.2.Final</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<!--  JBossAS 7
+		<dependency>
+			<groupId>org.jboss.as</groupId>
+			<artifactId>jboss-as-ee</artifactId>
+			<version>7.0.0.Final</version>
+			<type>pom</type>
+            <scope>provided</scope>
 		</dependency> -->
 
 	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>jboss_nexus_public</id>
+			<url>https://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+		</repository>
+		<!-- There are some dependencies have moved into these repos, but it's not part of "public-jboss" group, so we add here. -->
+		<repository>
+			<id>jboss_nexus_deprecated</id>
+			<url>https://repository.jboss.org/nexus/content/repositories/deprecated</url>
+		</repository>
+		<repository>
+			<id>jboss_nexus_java.net-m2-snapshots</id>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<url>https://repository.jboss.org/nexus/content/repositories/java.net-m2-snapshots/</url>
+		</repository>
+	</repositories>
 
 </project>
