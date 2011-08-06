@@ -5,7 +5,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>deng.quartz</groupId>
-	<artifactId>jboss-quartz-examples</artifactId>
+	<artifactId>jboss7-quartz-examples</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
