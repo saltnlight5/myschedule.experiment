@@ -42,10 +42,15 @@ public class JndiTest {
 	}
 	
 	/**
-	 * When creating MySQL DataSource in JBoss server, remeber to deploy the jdbc jar!
+	 * When creating MySQL DataSource in JBoss AS 6 server, remember to deploy the jdbc jar!
 	 * 
 	 * In JBoss6, there are 3 types of DataSource:
 	 * 1) Local TX DS, 2) No TX DS, 3) XA
+	 * 
+	 * http://community.jboss.org/wiki/ConfigDataSources
+	 * 1) Local TX DS - A DS that doesn't support two phase commit
+	 * 2) Not TX DS - A DS doesn't participate in JTA
+	 * 3) XA - A DS that participate in JTA
 	 * 
 	 * (For MySQL XA, you would need to set: com.mysql.jdbc.jdbc2.optional.MysqlXADataSource)
 	 * 
@@ -96,9 +101,12 @@ sql.eachRow('SELECT * FROM QRTZ_JOB_DETAILS'){ row-> println(row) }
 			Object connFact = ctx.lookup("/ConnectionFactory");
 			logger.info("ConnectionFactory: {}", connFact);
 									
-			Object quartzQueue = ctx.lookup("/queue/QuartzQueue");
+			Object quartzQueue = ctx.lookup("java:/queue/QuartzQueue");
 			logger.info("quartzQueue: {}", quartzQueue);
 
+			Object quartzTopic = ctx.lookup("java:/queue/QuartzTopic");
+			logger.info("quartzTopic: {}", quartzTopic);
+			
 			// This will not work, unless you run it inside the JBoss server instance.!
 //			Object quartz18LocalTxDs = ctx.lookup("/datasource/Quartz18LocalTxDs");
 //			logger.info("quartz18LocalTxDs: {}", quartz18LocalTxDs);
