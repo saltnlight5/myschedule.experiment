@@ -42,13 +42,19 @@ public class JndiTest {
 	}
 	
 	/**
+	 * When creating MySQL DataSource in JBoss server, remeber to deploy the jdbc jar!
+	 * 
 	 * In JBoss6, there are 3 types of DataSource:
 	 * 1) Local TX DS, 2) No TX DS, 3) XA
 	 * 
-	 * (For MySQL 1) and 3), you would need to set: com.mysql.jdbc.jdbc2.optional.MysqlXADataSource)
+	 * (For MySQL XA, you would need to set: com.mysql.jdbc.jdbc2.optional.MysqlXADataSource)
 	 * 
-	 * You can NOT access DataSource from remote client! You may access them within the server. Try deploy a groovy.war
+	 * NOTE: In JBoss6 admin-console, when setup DataSource, it won't save username/password. You must edit the xml
+	 * file and add them in manually.
+	 * 
+	 * You can NOT access DataSource from remote client! You may only access them within the server. Try deploy a groovy.war
 	 * and test it out like this:
+	 
 props = new Properties()
 props.setProperty('java.naming.factory.initial', 'org.jnp.interfaces.NamingContextFactory')
 props.setProperty('java.naming.factory.url.pkgs', 'org.jboss.naming:org.jnp.interfaces')
@@ -71,6 +77,14 @@ println("quartz18NonXaDs: " + quartz18NonXaDs)
 conn = quartz18NonXaDs.getConnection()
 println("quartz18NonXaDs conn: " + conn)
 conn.close()
+	 * 
+	 * 
+	 * You may also use Groovy Sql to verify the quartz table directly without the use of JBoss DataSource:
+
+import groovy.sql.Sql
+def sql = Sql.newInstance('jdbc:mysql://localhost/quartz18', 'quartz18', 'quartz18123', 'com.mysql.jdbc.Driver')
+sql.eachRow('SELECT * FROM QRTZ_JOB_DETAILS'){ row-> println(row) }
+
 	 */
 	@Test
 	public void testJndi() throws Exception {
@@ -85,11 +99,9 @@ conn.close()
 			Object quartzQueue = ctx.lookup("/queue/QuartzQueue");
 			logger.info("quartzQueue: {}", quartzQueue);
 
-			Object quartz18NonXA = ctx.lookup("/datasource/Quartz18NonXA");
-			logger.info("quartz18NonXA: {}", quartz18NonXA);
-			
-			Object quartz18XA = ctx.lookup("/datasource/Quartz18XA");
-			logger.info("quartz18XA: {}", quartz18XA);
+			// This will not work, unless you run it inside the JBoss server instance.!
+//			Object quartz18LocalTxDs = ctx.lookup("/datasource/Quartz18LocalTxDs");
+//			logger.info("quartz18LocalTxDs: {}", quartz18LocalTxDs);
 		} finally {
 			if (ctx != null) {
 				try {
