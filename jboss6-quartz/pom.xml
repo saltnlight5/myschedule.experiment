@@ -76,14 +76,18 @@
 			<artifactId>quartz</artifactId>
 			<version>1.7.3</version>
 		</dependency>
-		-->
-		<!-- Quartz 1.x JobStoreTx DataSource Pool (Note: quartz 2.0 uses c3p0)
+		-->		
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>1.8.5</version>
+		</dependency>
 		<dependency>
 			<groupId>commons-dbcp</groupId>
 			<artifactId>commons-dbcp</artifactId>
 			<version>1.4</version>
 			<scope>runtime</scope>
-		</dependency> -->
+		</dependency>
 
 		<!-- Quartz Oracle and JDBC Driver (there is no quartz-oracle-1.7.3)
 		<dependency>
@@ -99,7 +103,7 @@
 			<scope>runtime</scope>
 	    </dependency> -->
 	    
-	    <!-- Quartz 2.x -->
+	    <!-- Quartz 2.x
 	    <dependency>
 			<groupId>org.quartz-scheduler</groupId>
 			<artifactId>quartz</artifactId>
@@ -109,7 +113,8 @@
 			<groupId>c3p0</groupId>
 			<artifactId>c3p0</artifactId>
 			<version>0.9.1.2</version>
-		</dependency>
+			<scope>runtime</scope>
+		</dependency> -->
 		
 		<!-- MySql JDBC Driver (Note: there is no extra quartz component is needed with MySql.) -->
 		<dependency>

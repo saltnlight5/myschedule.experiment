@@ -13,8 +13,8 @@ public class DbJobRunTest
 {	
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 	
-	public static final String CONFIG = "quartz/experiment/quartz.properties.database_oracle";
-	public static final String JOB_NAME = "testSimpleJob";
+	public static final String CONFIG = "quartz/experiment/quartz.properties.database";
+	public static final String JOB_NAME = DbJobRunTest.class.getSimpleName();
 	public static final String JOB_GROUP = "DEFAULT";
 	
 	@Test
@@ -45,6 +45,33 @@ public class DbJobRunTest
 		StdSchedulerFactory sf = new StdSchedulerFactory(CONFIG);
 		Scheduler scheduler = sf.getScheduler();
 		scheduler.unscheduleJob(JOB_NAME, JOB_GROUP);
+		scheduler.shutdown();
+	}
+	
+	@Test
+	public void testListAllJobs() throws Exception {
+		StdSchedulerFactory sf = new StdSchedulerFactory(CONFIG);
+		Scheduler scheduler = sf.getScheduler();
+		for (String group : scheduler.getJobGroupNames()) {
+			String[] names = scheduler.getJobNames(group);
+			for (String name : names) {
+				logger.info("Job {}.{}", name, group);
+			}
+		}
+		scheduler.shutdown();
+	}
+	
+	@Test
+	public void testRemoveAllJobs() throws Exception {
+		StdSchedulerFactory sf = new StdSchedulerFactory(CONFIG);
+		Scheduler scheduler = sf.getScheduler();
+		for (String group : scheduler.getJobGroupNames()) {
+			String[] names = scheduler.getJobNames(group);
+			for (String name : names) {
+				scheduler.deleteJob(name, group);
+				logger.info("Deleted job {}.{}", name, group);
+			}
+		}
 		scheduler.shutdown();
 	}
 }

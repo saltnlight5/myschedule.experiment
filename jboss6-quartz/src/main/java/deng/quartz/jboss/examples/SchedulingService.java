@@ -31,8 +31,9 @@ public class SchedulingService {
 		jobData.put(JmsHelper.JMS_MSG_FACTORY_CLASS_NAME, SimpleJmsMessageFactory.class.getName());
 		jobData.put(JmsHelper.INITIAL_CONTEXT_FACTORY, "org.jnp.interfaces.NamingContextFactory");
 		jobData.put(JmsHelper.PROVIDER_URL, "localhost:1099");
-		JobDetail job = JobBuilder.newJob(SendDestinationMessageJob.class).withIdentity("jmsJob").usingJobData(jobData).build();
-		Trigger trigger = TriggerBuilder.newTrigger().withIdentity("jmsJob").build();
+		JobDetail job = new JobDetail("jmsJob", "DEFAULT", SendDestinationMessageJob.class);
+		job.setJobDataMap(jobData);
+		Trigger trigger = new SimpleTrigger("jmsJob", "DEFAULT");
 		try {
 			scheduler.scheduleJob(job, trigger);
 		} catch (SchedulerException e) {
