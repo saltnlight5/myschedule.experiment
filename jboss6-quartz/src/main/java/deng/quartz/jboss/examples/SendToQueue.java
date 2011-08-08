@@ -9,11 +9,12 @@ import javax.jms.TextMessage;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SendToQueue {
-
-	private static Logger logger = Logger.getLogger(JndiTest.class);
+	
+	protected static Logger logger = LoggerFactory.getLogger(SendToQueue.class);
 	
 	public static void main(String[] args) throws Exception {
 		String queueName = "/queue/ExampleQueue";
