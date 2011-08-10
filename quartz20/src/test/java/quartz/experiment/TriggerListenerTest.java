@@ -35,13 +35,13 @@ public class TriggerListenerTest {
 		scheduler.shutdown();
 	}
 
-	private void prepSimpleJobs(Scheduler scheduler) throws Exception {
+	protected void prepSimpleJobs(Scheduler scheduler) throws Exception {
 		JobDetail jobDetail = JobBuilder.newJob(SimpleJob.class).withIdentity(JOB_NAME).build();
 		Trigger trigger = TriggerBuilder.newTrigger().withIdentity(JOB_NAME)
 				.withSchedule(SimpleScheduleBuilder.simpleSchedule().withRepeatCount(1).withIntervalInMilliseconds(3000)).build();
 		scheduler.scheduleJob(jobDetail, trigger);
 	}
-	private void prepCrontJobs(Scheduler scheduler) throws Exception {		
+	protected void prepCrontJobs(Scheduler scheduler) throws Exception {		
 		String cronExpression = "0/3 * * * * ?";
 		JobDetail jobDetail = JobBuilder.newJob(SimpleJob.class).withIdentity(JOB_NAME).build();
 		Trigger trigger = TriggerBuilder.newTrigger().withIdentity(JOB_NAME)

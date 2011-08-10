@@ -1,7 +1,7 @@
 package quartz.experiment;
 
 import static org.quartz.JobBuilder.*;
-import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
+import static org.quartz.CalendarIntervalScheduleBuilder.*;
 import static org.quartz.TriggerBuilder.*;
 
 import org.junit.Test;
@@ -12,11 +12,12 @@ import org.quartz.impl.StdSchedulerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class QuickTest {
+public class CalendarIntervalTriggerTest {
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 
-	public static final String CONFIG = "quartz/experiment/quartz.properties.basic";
-	public static final String JOB_NAME = QuickTest.class.getSimpleName();
+//	public static final String CONFIG = "quartz/experiment/quartz.properties.basic";
+	public static final String CONFIG = "quartz/experiment/quartz.properties.database";
+	public static final String JOB_NAME = CalendarIntervalTriggerTest.class.getSimpleName();
 	public static final String JOB_GROUP = "DEFAULT";
 
 	@Test
@@ -30,9 +31,8 @@ public class QuickTest {
 		Trigger trigger = newTrigger()
 				.withIdentity(JOB_NAME)
 				.withSchedule(
-						simpleSchedule()
-						.repeatForever()
-						.withIntervalInMilliseconds(3000))
+						calendarIntervalSchedule()
+						.withIntervalInSeconds(35))
 				.build();
 		scheduler.scheduleJob(jobDetail, trigger);
 		

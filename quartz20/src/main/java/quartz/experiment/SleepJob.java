@@ -25,7 +25,9 @@ public class SleepJob implements Job {
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		JobDetail job = context.getJobDetail();
 		String jobName = job.getKey().getName();
-		long sleepTime = job.getJobDataMap().getLong(SLEEP_TIME_PARAM);
+		long sleepTime = 0L;
+		if (job.getJobDataMap().containsKey(SLEEP_TIME_PARAM))
+			sleepTime = job.getJobDataMap().getLong(SLEEP_TIME_PARAM);
 		logger.info(jobName + " is about to sleep for " + sleepTime + " ms.");
 		try {
 			Thread.sleep(sleepTime);

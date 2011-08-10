@@ -1,5 +1,8 @@
 package quartz.experiment;
 
+import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
+import static org.quartz.TriggerBuilder.newTrigger;
+
 import org.junit.Test;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
@@ -10,10 +13,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.PersistJobDataAfterExecution;
 import org.quartz.Scheduler;
-import org.quartz.SimpleScheduleBuilder;
-import org.quartz.StatefulJob;
 import org.quartz.Trigger;
-import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,19 +39,17 @@ public class StatefulJobTest {
 	}
 
 	private void prepJobs(Scheduler scheduler) throws Exception {
-		JobDetail jobDetail = JobBuilder.
-				newJob(TestJob.class).
-				withIdentity(JOB_NAME).
-				usingJobData("count", 1).
-				build();
-		Trigger trigger = TriggerBuilder.newTrigger().
-				withIdentity(JOB_NAME).
-				withSchedule(SimpleScheduleBuilder.
-						simpleSchedule().
-						withRepeatCount(1).
-						withIntervalInMilliseconds(1000)
-				).
-				build();
+		JobDetail jobDetail = JobBuilder
+				.newJob(TestJob.class)
+				.withIdentity(JOB_NAME)
+				.usingJobData("count", 1)
+				.build();
+		Trigger trigger = newTrigger()
+				.withIdentity(JOB_NAME)
+				.withSchedule(simpleSchedule()
+						.withRepeatCount(1)
+						.withIntervalInMilliseconds(1000))
+				.build();
 		scheduler.scheduleJob(jobDetail, trigger);
 	}
 	
