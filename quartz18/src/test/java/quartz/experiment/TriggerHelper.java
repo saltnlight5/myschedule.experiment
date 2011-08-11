@@ -7,6 +7,7 @@ import java.util.List;
 import org.quartz.CronExpression;
 
 public class TriggerHelper {
+	
 	public static List<Date> getNextFireTimes(CronExpression cron, int maxCount) {
 		List<Date> result = new ArrayList<Date>(maxCount);
 		Date nextDate = new Date();
@@ -18,4 +19,5 @@ public class TriggerHelper {
 		}
 		return result;
 	}
+	
 }

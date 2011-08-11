@@ -30,6 +30,13 @@ public class CronExpressionTest {
 	}
 
 	@Test
+	public void test30MinuteFireTime() throws Exception {
+		logger.info("Now " + new Date());
+		showCronFireTimes("0/10 * * * * ?");
+		//showCronFireTimes("0 0/30 * * * ?");
+	}
+	
+	@Test
 	public void testNthTheWeekInAMonth() throws Exception {
 		showCronFireTimes("0 0 0 ? 11 5#4 *"); // every 4th THU in Nov
 		showCronFireTimes("0 0 0 ? Nov THU#4 *"); // same

@@ -18,16 +18,28 @@ import org.slf4j.LoggerFactory;
 public class CronTest {
 	private Logger logger = LoggerFactory.getLogger(CronTest.class);
 	
+	/** W - "Nth" weekdays of the month */
 	@Test
 	public void testW_Character() throws Exception {
+		// First weekdays of the month.
 		assertThat(CronExpression.isValidExpression("0 0 12 1W * ?"), is(true));
-		assertThat(CronExpression.isValidExpression("0 0 12 W * ?"), is(false)); // Not a valid expression!
+		showFireTimes(TriggerHelper.getNextFireTimes(new CronExpression("0 0 12 1W * ?"), 20));
+		
+		// But you must prefix with a number, or else it's invalid.
+		assertThat(CronExpression.isValidExpression("0 0 12 W * ?"), is(false));
 	}
 	
 	@Test
 	public void testFirstAndLastDayOfMonth() throws Exception {
-		CronExpression cron = new CronExpression("0 0 8 L * ?");
-		showFireTimes(TriggerHelper.getNextFireTimes(cron, 20));
+		// first day only.
+		CronExpression cron1 = new CronExpression("0 0 8 1 * ?");
+		showFireTimes(TriggerHelper.getNextFireTimes(cron1, 20));
+		// last day only.
+		CronExpression cron2 = new CronExpression("0 0 8 L * ?");
+		showFireTimes(TriggerHelper.getNextFireTimes(cron2, 20));
+		
+		// How do I combine it?
+		// Solution#1: Create one JobDetail, then two Triggers above.		
 	}
 	
 	@Test

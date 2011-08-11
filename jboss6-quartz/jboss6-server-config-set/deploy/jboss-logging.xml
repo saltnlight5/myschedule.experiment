@@ -226,15 +226,20 @@
 	<!-- for packages that you don't want to trace       -->
 	<!-- =============================================== -->
 
-	<!-- Set Quartz and MySchedule logging levels for debugging -->
-	<logger category="org.quartz">
-		<level name="DEBUG"/>
-	</logger>
+	<!-- MySchedule Application -->
 	<logger category="myschedule">
 		<level name="DEBUG"/>
 	</logger>
 	<logger category="deng">
 		<level name="DEBUG"/>
+	</logger>
+	<logger category="org.quartz">
+		<level name="DEBUG"/>
+	</logger>
+
+	<!-- Limit the springframework category to WARN-->
+	<logger category="org.springframework">
+		<level name="WARN"/>
 	</logger>
 		
 	<!-- Limit the org.apache category to INFO as its DEBUG is verbose -->
@@ -271,12 +276,7 @@
 	<logger category="javax.xml.bind">
 		<level name="INFO"/>
 	</logger>
-
-	<!-- Limit the springframework category to WARN-->
-	<logger category="org.springframework">
-		<level name="WARN"/>
-	</logger>
-
+	
 	<!-- Limit JBoss categories
    <logger category="org.jboss">
       <level name="INFO"/>
