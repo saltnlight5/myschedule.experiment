@@ -1,10 +1,16 @@
-package timemachine;
+package tim.scheduler;
 
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import tim.scheduler.MemScheduler;
+import tim.scheduler.OnceSchedule;
+import tim.scheduler.RunnableJob;
+import tim.scheduler.Scheduler;
+import tim.scheduler.SimpleRunnableJob;
 
 public class MemSchedulerTest {
 	Logger logger = LoggerFactory.getLogger(getClass());

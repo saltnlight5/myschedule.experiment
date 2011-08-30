@@ -1,4 +1,4 @@
-package timemachine;
+package tim.scheduler;
 
 import java.util.HashMap;
 import java.util.Map;

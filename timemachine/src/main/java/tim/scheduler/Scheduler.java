@@ -1,4 +1,4 @@
-package timemachine;
+package tim.scheduler;
 
 public interface Scheduler {
 	String getName();
