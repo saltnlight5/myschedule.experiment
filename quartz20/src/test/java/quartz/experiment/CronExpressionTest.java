@@ -20,7 +20,6 @@ public class CronExpressionTest {
 	
 	@Test
 	public void testSample() throws Exception {
-		
 	}
 
 	@Test

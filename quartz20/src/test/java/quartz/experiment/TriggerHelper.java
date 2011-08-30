@@ -34,8 +34,10 @@ public class TriggerHelper {
 	}
 	
 	public static CronTrigger cronTrigger(String name, String cron) throws ParseException {
-		CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity(name)
-				.withSchedule(CronScheduleBuilder.cronSchedule(cron)).build();
+		CronTrigger trigger = TriggerBuilder.
+				newTrigger().
+				withIdentity(name).
+				withSchedule(CronScheduleBuilder.cronSchedule(cron)).build();
 		return trigger;
 	}
 }

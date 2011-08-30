@@ -4,6 +4,8 @@ import static org.quartz.CronScheduleBuilder.cronSchedule;
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.TriggerBuilder.newTrigger;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
@@ -22,7 +24,7 @@ import org.slf4j.LoggerFactory;
 public class DbJobRunTest {
 	
 	protected Logger logger = LoggerFactory.getLogger(getClass());
-	public static final String CONFIG = "quartz/experiment/quartz.properties.database";
+	public static final String CONFIG = "quartz/experiment/quartz.properties.database.derby";
 	public static final String JOB_NAME = DbJobRunTest.class.getSimpleName();
 	public static final String JOB_GROUP = "DEFAULT";
 
@@ -48,7 +50,7 @@ public class DbJobRunTest {
 		StdSchedulerFactory sf = new StdSchedulerFactory(CONFIG);
 		Scheduler scheduler = sf.getScheduler();
 		scheduler.start();
-		Thread.sleep(9000);
+		Thread.sleep(Long.MAX_VALUE);
 		scheduler.shutdown();
 	}
 
@@ -86,6 +88,10 @@ public class DbJobRunTest {
 			GroupMatcher<JobKey> matcher = GroupMatcher.groupEquals(group);
 			for (JobKey jobKey : scheduler.getJobKeys(matcher)) {
 				logger.info("Job {}", jobKey);
+				List<? extends Trigger> triggers = scheduler.getTriggersOfJob(jobKey);
+				for (Trigger trigger : triggers) {
+					logger.info("  trigger: {}",  trigger);
+				}
 			}
 		}
 		scheduler.shutdown();
