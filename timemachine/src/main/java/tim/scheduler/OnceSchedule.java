@@ -5,11 +5,17 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** A schedule that runs job only one. */
 public class OnceSchedule implements Schedule {
+	
+	private static final Logger logger = LoggerFactory.getLogger(OnceSchedule.class);
 	protected Date startTime = new Date();
-	protected boolean ended;
+	protected AtomicBoolean ended = new AtomicBoolean(false);
 	protected List<Job> jobs = new ArrayList<Job>();
 	protected String name = "OnceSchedule_" + UUID.randomUUID().toString();
 
@@ -26,11 +32,14 @@ public class OnceSchedule implements Schedule {
 	}
 
 	public boolean isEnded() {
-		return ended;
+		return ended.get();
 	}
 	
 	public Date getNextRunTime() {
-		return startTime;
+		if (!isEnded())
+			return startTime;
+		else
+			return null;
 	}
 	
 	public Date getStartTime() {
@@ -42,5 +51,15 @@ public class OnceSchedule implements Schedule {
 	}
 	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
+	}
+
+	@Override
+	public void init() {
+		logger.debug("Initializing {}.", name);
+	}
+
+	@Override
+	public void updateNextRunTime() {
+		ended.set(true);
 	}
 }

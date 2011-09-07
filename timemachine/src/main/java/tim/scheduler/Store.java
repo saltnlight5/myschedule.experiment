@@ -8,4 +8,6 @@ public interface Store {
 
 	Collection<Schedule> getSchedules();
 
+	void removeSchedule(Schedule schedule);
+
 }

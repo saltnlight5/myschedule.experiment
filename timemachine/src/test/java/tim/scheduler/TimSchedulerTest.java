@@ -12,7 +12,7 @@ import tim.scheduler.RunnableJob;
 import tim.scheduler.Scheduler;
 import tim.scheduler.SimpleRunnableJob;
 
-public class MemSchedulerTest {
+public class TimSchedulerTest {
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
 	@Test
@@ -48,6 +48,7 @@ public class MemSchedulerTest {
 			
 			sche.init();
 			sche.addSchedule(schedule);
+			
 			sche.start();
 
 //			Thread.sleep(3000);

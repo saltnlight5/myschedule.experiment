@@ -4,6 +4,9 @@ import java.util.Date;
 import java.util.List;
 
 public interface Schedule {
+	
+	void init();
+	
 	void addJob(Job job);
 	
 	String getName();
@@ -15,4 +18,6 @@ public interface Schedule {
 	Date getNextRunTime();
 	
 	Date getStartTime();
+
+	void updateNextRunTime();
 }

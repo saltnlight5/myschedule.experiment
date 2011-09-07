@@ -1,5 +1,6 @@
 package tim.scheduler;
 
+import java.util.Date;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -23,7 +24,10 @@ public class TimScheduler extends AbstractService implements Scheduler {
 	
 	@Override
 	public void addSchedule(Schedule schedule) {
+		logger.debug("Initializing schedule {} before adding to store.", schedule);
+		schedule.init();
 		store.addSchedule(schedule);
+		logger.info("Schedule {} has been added to store.", schedule);
 	}
 	
 	@Override
@@ -62,11 +66,27 @@ public class TimScheduler extends AbstractService implements Scheduler {
 	
 	@Override
 	public void startService() {
+		logger.info("{} started.", this);
 		while(started.get()) {
 			for (Schedule schedule : store.getSchedules()) {
 				String name = schedule.getName();
-				for (Job job : schedule.getJobs()) {
-					logger.info("Checking job {} with schedule {}.", job.getName(), name);
+				
+				if(schedule.isEnded()) {
+					logger.debug("Removing ended schedule {} from store.", name);
+					store.removeSchedule(schedule);
+					logger.debug("Schedule {} has been ended and removed from store.", name);
+					continue;
+				}
+
+				Date nextRunTime = schedule.getNextRunTime();
+				logger.debug("Checking schedule {} with nextRunTime {}.", name, nextRunTime);
+				Date now = new Date();
+				if (now.getTime() > nextRunTime.getTime()) {
+					logger.debug("Jobs are due on schedule {}.", name);
+					for (Job job : schedule.getJobs()) {
+						poolJobForExecution(job);
+					}
+					schedule.updateNextRunTime();
 				}
 			}
 			sleep(500);
@@ -76,6 +96,19 @@ public class TimScheduler extends AbstractService implements Scheduler {
 	@Override
 	public void stopService() {
 		logger.info("{} stopped.", this);
+	}
+
+	protected void poolJobForExecution(Job job) {
+		logger.debug("Preparing to pool job {} for execution.", job);
+		if (job instanceof RunnableJob) {
+			RunnableJob runnableJob = (RunnableJob)job;
+			Class<? extends Runnable> jobClass = runnableJob.getRunabbleClass();
+			Runnable jobInstance = createInstance(jobClass);
+			jobExecutionThreadPool.execute(jobInstance);
+		} else {
+			throw new RuntimeException("Job type " + job.getClass().getName() + " has not yet implemented.");
+		}
+		logger.info("Job {} has been pooled for execution.", job);
 	}
 	
 	private void sleep(long millisecs) {
