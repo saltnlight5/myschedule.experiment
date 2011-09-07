@@ -14,6 +14,9 @@ public abstract class AbstractService implements Service {
 	
 	@Override
 	public void start() {
+		if (!inited.get())
+			init();
+		
 		if (!started.get()) {
 			started.set(true);
 			startService();
@@ -38,6 +41,9 @@ public abstract class AbstractService implements Service {
 
 	@Override
 	public void destroy() {
+		if (started.get())
+			stop();		
+		
 		if (inited.get()) {
 			destroyService();
 			inited.set(false);

@@ -1,7 +1,7 @@
 package tim.scheduler;
 
 import java.util.Date;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.slf4j.Logger;
@@ -13,7 +13,10 @@ public class TimScheduler extends AbstractService implements Scheduler {
 	protected SchedulerConfig config;			
 	protected String name;
 	protected Store store;
-	protected Executor jobExecutionThreadPool;
+	protected ExecutorService workThreadPool;
+	protected ExecutorService schedulerThreadPool;
+	protected SchedulerRunner schedulerRunner;
+	protected boolean shutdownThreadPoolImmediatly;
 		
 	public String getName() {
 		return name;
@@ -43,8 +46,14 @@ public class TimScheduler extends AbstractService implements Scheduler {
 			name = config.schedulerName;
 		if (store == null)
 			store = createInstance(config.storeClass);
-		if (jobExecutionThreadPool == null)
-			jobExecutionThreadPool = Executors.newFixedThreadPool(config.jobExecutionThreadPoolSize);
+		if (workThreadPool == null)
+			workThreadPool = Executors.newFixedThreadPool(config.workThreadPoolSize);
+		if (schedulerThreadPool == null)
+			schedulerThreadPool = Executors.newFixedThreadPool(1);
+		if (schedulerRunner == null)
+			schedulerRunner = new SchedulerRunner();
+		
+		shutdownThreadPoolImmediatly = config.shutdownThreadPoolImmediatly;
 		
 		logger.info("{} initialized.", this);
 	}
@@ -66,49 +75,33 @@ public class TimScheduler extends AbstractService implements Scheduler {
 	
 	@Override
 	public void startService() {
+		schedulerThreadPool.execute(schedulerRunner);
 		logger.info("{} started.", this);
-		while(started.get()) {
-			for (Schedule schedule : store.getSchedules()) {
-				String name = schedule.getName();
-				
-				if(schedule.isEnded()) {
-					logger.debug("Removing ended schedule {} from store.", name);
-					store.removeSchedule(schedule);
-					logger.debug("Schedule {} has been ended and removed from store.", name);
-					continue;
-				}
-
-				Date nextRunTime = schedule.getNextRunTime();
-				logger.debug("Checking schedule {} with nextRunTime {}.", name, nextRunTime);
-				Date now = new Date();
-				if (now.getTime() > nextRunTime.getTime()) {
-					logger.debug("Jobs are due on schedule {}.", name);
-					for (Job job : schedule.getJobs()) {
-						poolJobForExecution(job);
-					}
-					schedule.updateNextRunTime();
-				}
-			}
-			sleep(500);
-		}
 	}
 	
 	@Override
 	public void stopService() {
+		if (shutdownThreadPoolImmediatly) {
+			logger.debug("Shutting down thread pools now.");
+			workThreadPool.shutdownNow();
+			schedulerThreadPool.shutdownNow();
+		} else {
+			logger.debug("Shutting down thread pools now.");
+			workThreadPool.shutdown();
+			schedulerThreadPool.shutdown();
+		}
 		logger.info("{} stopped.", this);
 	}
 
 	protected void poolJobForExecution(Job job) {
-		logger.debug("Preparing to pool job {} for execution.", job);
-		if (job instanceof RunnableJob) {
-			RunnableJob runnableJob = (RunnableJob)job;
-			Class<? extends Runnable> jobClass = runnableJob.getRunabbleClass();
-			Runnable jobInstance = createInstance(jobClass);
-			jobExecutionThreadPool.execute(jobInstance);
-		} else {
-			throw new RuntimeException("Job type " + job.getClass().getName() + " has not yet implemented.");
-		}
-		logger.info("Job {} has been pooled for execution.", job);
+		logger.debug("Preparing to pool job {} work for execution.", job);
+		
+		Class<? extends Work> workClass = job.getWorkClass();
+		Work work = createInstance(workClass);
+		WorkRunner workRunner = new WorkRunner(work);
+		workThreadPool.execute(workRunner);
+		
+		logger.info("Job {} work has been pooled for execution.", job);
 	}
 	
 	private void sleep(long millisecs) {
@@ -117,5 +110,52 @@ public class TimScheduler extends AbstractService implements Scheduler {
 		} catch (InterruptedException e) {
 			throw new RuntimeException("Failed to sleep full " + millisecs + " millisecs.", e);
 		}
+	}
+	
+	public class WorkRunner implements Runnable {
+
+		protected Work work;
+		
+		public WorkRunner(Work work) {
+			this.work = work;
+		}
+		
+		@Override
+		public void run() {
+			SchedulerContext schedulerCtx = new TimSchedulerContext(TimScheduler.this);
+			work.run(schedulerCtx);
+		}
+	}
+	
+	public class SchedulerRunner implements Runnable {
+
+		@Override
+		public void run() {
+			while(started.get()) {
+				for (Schedule schedule : store.getSchedules()) {
+					String name = schedule.getName();
+					
+					if(schedule.isEnded()) {
+						logger.debug("Removing ended schedule {} from store.", name);
+						store.removeSchedule(schedule);
+						logger.debug("Schedule {} has been ended and removed from store.", name);
+						continue;
+					}
+
+					Date nextRunTime = schedule.getNextRunTime();
+					logger.debug("Checking schedule {} with nextRunTime {}.", name, nextRunTime);
+					Date now = new Date();
+					if (now.getTime() > nextRunTime.getTime()) {
+						logger.debug("Jobs are due on schedule {}.", name);
+						for (Job job : schedule.getJobs()) {
+							poolJobForExecution(job);
+						}
+						schedule.updateNextRunTime();
+					}
+				}
+				sleep(500);
+			}
+		}
+		
 	}
 }

@@ -12,8 +12,9 @@ public class SchedulerConfig {
 	
 	public static final SchedulerConfig DEFAULT_CONFIG = loadPropsConfig(mkURL("classpath:timscheduler.properties"));
 	protected String schedulerName;
-	protected int jobExecutionThreadPoolSize;
+	protected int workThreadPoolSize;
 	protected Class<? extends Store> storeClass;
+	protected boolean shutdownThreadPoolImmediatly;
 	
 	public static SchedulerConfig loadPropsConfig(URL configUrl) {
 		Properties props = loadProps(configUrl);
@@ -21,9 +22,10 @@ public class SchedulerConfig {
 		String prefix = "tim.scheduler.";
 		
 		config.schedulerName = props.getProperty(prefix + "schedulerName", UUID.randomUUID().toString());
-		config.jobExecutionThreadPoolSize = Integer.parseInt(props.getProperty(prefix + "jobExecutionThreadPoolSize", "4"));
+		config.workThreadPoolSize = Integer.parseInt(props.getProperty(prefix + "workThreadPoolSize", "4"));
 		config.storeClass = createClass(props.getProperty(prefix + "storeClass", MemStore.class.getName()));
-		
+		config.shutdownThreadPoolImmediatly = Boolean.parseBoolean(props.getProperty(prefix + "shutdownThreadPoolImmediatly", "false"));
+				
 		return config;
 	}
 	

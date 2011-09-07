@@ -6,12 +6,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import tim.scheduler.TimScheduler;
-import tim.scheduler.OnceSchedule;
-import tim.scheduler.RunnableJob;
-import tim.scheduler.Scheduler;
-import tim.scheduler.SimpleRunnableJob;
-
 public class TimSchedulerTest {
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -39,9 +33,9 @@ public class TimSchedulerTest {
 	public void testStart() throws Exception {
 		Scheduler sche = new TimScheduler();
 		try {
-			RunnableJob job = new RunnableJob();
+			Job job = new Job();
 			job.setName("job1");
-			job.setRunabbleClass(SimpleRunnableJob.class);
+			job.setWorkClass(LoggerWork.class);
 			
 			OnceSchedule schedule = new OnceSchedule();
 			schedule.addJob(job);
@@ -51,8 +45,8 @@ public class TimSchedulerTest {
 			
 			sche.start();
 
-//			Thread.sleep(3000);
-//			sche.stop();
+			Thread.sleep(3000);
+			sche.stop();
 		} finally {
 			sche.destroy();
 		}

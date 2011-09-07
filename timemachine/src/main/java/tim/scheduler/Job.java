@@ -1,7 +1,27 @@
 package tim.scheduler;
 
-public interface Job {
+public class Job {
 	
-	String getName();
+	protected Class<? extends Work> workClass;
+	protected String name;
 	
+	public void setWorkClass(Class<? extends Work> workClass) {
+		this.workClass = workClass;
+	}
+	
+	public Class<? extends Work> getWorkClass() {
+		return workClass;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	@Override
+	public String toString() {
+		return "Job[" + name + ", workClass=" + workClass.getName() + "]";
+	}
 }
