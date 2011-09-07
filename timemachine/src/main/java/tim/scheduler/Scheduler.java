@@ -1,15 +1,8 @@
 package tim.scheduler;
 
-public interface Scheduler {
-	String getName();
+public interface Scheduler extends Service {
 	
+	String getName();
 	void addSchedule(Schedule schedule);
 	
-	void start();
-	
-	void stop();
-	
-	void init();
-	
-	void destroy();
 }
