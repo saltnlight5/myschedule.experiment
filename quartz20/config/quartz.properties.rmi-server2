@@ -5,7 +5,7 @@
 # instead of let RMI randomly select one.
 
 org.quartz.scheduler.skipUpdateCheck = true
-org.quartz.scheduler.instanceName = QuartzScheduler
+org.quartz.scheduler.instanceName = RmiQuartzScheduler
 org.quartz.scheduler.instanceId = NON_CLUSTERED
 org.quartz.jobStore.class = org.quartz.simpl.RAMJobStore
 org.quartz.threadPool.class = org.quartz.simpl.SimpleThreadPool
