@@ -6,3 +6,10 @@ org.quartz.threadPool.class = org.quartz.simpl.SimpleThreadPool
 org.quartz.threadPool.threadCount = 5
 #org.quartz.scheduler.classLoadHelper.class = org.quartz.extra.CascadingClassLoadHelperExt
 org.quartz.scheduler.classLoadHelper.class = org.quartz.extra.JclClassLoadHelper
+
+# http://www.quartz-scheduler.org/docs/cookbook/JobInitPlugin.html
+org.quartz.plugin.jobInitializer.class = org.quartz.plugins.xml.XMLSchedulingDataProcessorPlugin
+# you can not have space in fileNames list!
+org.quartz.plugin.jobInitializer.fileNames = quartz-jobs-classloadhelper2.xml
+org.quartz.plugin.jobInitializer.scanInterval = 0
+org.quartz.plugin.jobInitializer.wrapInUserTransaction = false

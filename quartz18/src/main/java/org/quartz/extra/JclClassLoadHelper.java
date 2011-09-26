@@ -3,11 +3,15 @@ package org.quartz.extra;
 import java.io.InputStream;
 import java.net.URL;
 
+import org.quartz.simpl.CascadingClassLoadHelper;
+import org.quartz.spi.ClassLoadHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xeustechnologies.jcl.JarClassLoader;
 
 /**
- * An extension to CascadingClassLoadHelperExt that support JarClassLoader. If this class failed to load
- * a class or resource, it will delegate to parent.
+ * A ClassLoaderHelper that uses JarClassLoader. If this class failed to load
+ * a class or resource, it will delegate to the CascadingClassLoadHelper.
  * 
  * <p>
  * Due to Quartz has no way to set this class fields, you may customize the jarPaths by using sys prop.
@@ -24,11 +28,13 @@ import org.xeustechnologies.jcl.JarClassLoader;
  * @author Zemian Deng <saltnlight5@gmail.com>
  *
  */
-public class JclClassLoadHelper extends CascadingClassLoadHelperExt {
+public class JclClassLoadHelper implements ClassLoadHelper {
 	
+	private static final Logger logger = LoggerFactory.getLogger(JclClassLoadHelper.class);
 	protected String jarPaths;
 	protected boolean loadOrigJavaClassPath;
 	protected JarClassLoader jcl;
+	protected CascadingClassLoadHelper cascadeClassLoadHelper;
 
 	public void setJarPaths(String jarPaths) {
 		this.jarPaths = jarPaths;
@@ -62,8 +68,9 @@ public class JclClassLoadHelper extends CascadingClassLoadHelperExt {
 			}
 		}
 
-		// Call super initialize
-		super.initialize();
+		// Initialize a fall back ClassLoadHelper.
+		cascadeClassLoadHelper = new CascadingClassLoadHelper();
+		cascadeClassLoadHelper.initialize();
 	}
 
 	@Override
@@ -77,8 +84,8 @@ public class JclClassLoadHelper extends CascadingClassLoadHelperExt {
 		logger.debug("getResource: {}", name);
 		URL ret = jcl.getResource(name);
 		if (ret == null) {
-			logger.debug("No found. use parent classLoadHelper.");
-			ret = super.getResource(name);
+			logger.debug("No found. use cascadeClassLoadHelper.");
+			ret = cascadeClassLoadHelper.getResource(name);
 		}
 		return ret;
 	}
@@ -88,8 +95,8 @@ public class JclClassLoadHelper extends CascadingClassLoadHelperExt {
 		logger.debug("getResourceAsStream: {}", name);
 		InputStream ret = jcl.getResourceAsStream(name);
 		if (ret == null) {
-			logger.debug("No found. use parent classLoadHelper.");
-			ret = super.getResourceAsStream(name);
+			logger.debug("No found. use cascadeClassLoadHelpers.");
+			ret = cascadeClassLoadHelper.getResourceAsStream(name);
 		}
 		return ret;
 	}
@@ -101,8 +108,8 @@ public class JclClassLoadHelper extends CascadingClassLoadHelperExt {
 		try {
 			ret = jcl.loadClass(className);
 		} catch (ClassNotFoundException e) {
-			logger.debug("No found. use parent classLoadHelper.");
-			ret = super.loadClass(className);
+			logger.debug("No found. use cascadeClassLoadHelper.");
+			ret = cascadeClassLoadHelper.loadClass(className);
 		}
 		return ret;
 	}

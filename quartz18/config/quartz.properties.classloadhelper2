@@ -4,7 +4,7 @@
 org.quartz.scheduler.skipUpdateCheck = true
 org.quartz.threadPool.class = org.quartz.simpl.SimpleThreadPool
 org.quartz.threadPool.threadCount = 5
-org.quartz.scheduler.classLoadHelper.class = org.quartz.extra.JclClassLoadHelper
+org.quartz.scheduler.classLoadHelper.class = org.quartz.extra.JclClassLoadHelper2
 
 # http://www.quartz-scheduler.org/docs/cookbook/JobInitPlugin.html
 org.quartz.plugin.jobInitializer.class = org.quartz.plugins.xml.XMLSchedulingDataProcessorPlugin
