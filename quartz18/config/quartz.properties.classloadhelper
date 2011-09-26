@@ -1,0 +1,8 @@
+# A Quartz Scheduler configuration with JobSchedulingData xml plugin.
+# http://quartz-scheduler.org/documentation/quartz-1.x/configuration
+
+org.quartz.scheduler.skipUpdateCheck = true
+org.quartz.threadPool.class = org.quartz.simpl.SimpleThreadPool
+org.quartz.threadPool.threadCount = 5
+#org.quartz.scheduler.classLoadHelper.class = org.quartz.extra.CascadingClassLoadHelperExt
+org.quartz.scheduler.classLoadHelper.class = org.quartz.extra.JclClassLoadHelper

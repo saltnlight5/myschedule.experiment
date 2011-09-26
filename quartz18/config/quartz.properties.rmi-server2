@@ -1,5 +1,5 @@
 # A Quartz Scheduler configuration for RMI server
-# See http://www.quartz-scheduler.org/docs/configuration
+# http://quartz-scheduler.org/documentation/quartz-1.x/configuration
 
 # This config will assign an explicit scheduler server port to be use
 # instead of let RMI randomly select one.

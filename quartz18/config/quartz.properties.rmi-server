@@ -1,5 +1,5 @@
 # A Quartz Scheduler configuration for RMI server
-# See http://www.quartz-scheduler.org/docs/configuration
+# http://quartz-scheduler.org/documentation/quartz-1.x/configuration
 
 org.quartz.scheduler.skipUpdateCheck = true
 org.quartz.scheduler.instanceName = QuartzScheduler
