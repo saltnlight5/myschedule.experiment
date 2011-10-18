@@ -18,7 +18,7 @@ public class QuartzServerClean extends QuartzServer {
 			logger.info("Delete all job and triggers.");
 			List<String> names = scheduler.getJobGroupNames();
 			for (String name : names) {
-				Set<JobKey> keys = scheduler.getJobKeys(GroupMatcher.groupEquals(name));
+				Set<JobKey> keys = scheduler.getJobKeys(GroupMatcher.jobGroupEquals(name));
 				for (JobKey key : keys) {
 					scheduler.deleteJob(key);
 					logger.info(key + " deleted.");

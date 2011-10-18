@@ -117,6 +117,12 @@ public class CascadingClassLoadHelperExt implements ClassLoadHelper {
         return clazz;
     }
 
+    @SuppressWarnings("unchecked")
+    public <T> Class<? extends T> loadClass(String name, Class<T> clazz)
+            throws ClassNotFoundException {
+        return (Class<? extends T>) loadClass(name);
+    }
+
     /**
      * Finds a resource with a given name. This method returns null if no
      * resource with this name is found.
