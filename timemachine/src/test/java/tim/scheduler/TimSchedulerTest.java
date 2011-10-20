@@ -35,7 +35,7 @@ public class TimSchedulerTest {
 		try {
 			Job job = new Job();
 			job.setName("job1");
-			job.setWorkClass(LoggerWork.class);
+			job.setWorkClass(LoggerTask.class);
 			
 			OnceSchedule schedule = new OnceSchedule();
 			schedule.addJob(job);

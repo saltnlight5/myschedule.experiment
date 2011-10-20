@@ -2,14 +2,14 @@ package tim.scheduler;
 
 public class Job {
 	
-	protected Class<? extends Work> workClass;
+	protected Class<? extends Task> workClass;
 	protected String name;
 	
-	public void setWorkClass(Class<? extends Work> workClass) {
+	public void setWorkClass(Class<? extends Task> workClass) {
 		this.workClass = workClass;
 	}
 	
-	public Class<? extends Work> getWorkClass() {
+	public Class<? extends Task> getWorkClass() {
 		return workClass;
 	}
 	

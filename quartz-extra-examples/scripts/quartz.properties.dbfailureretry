@@ -1,0 +1,22 @@
+# A Quartz Scheduler configuration for DataStore
+# See http://www.quartz-scheduler.org/docs/configuration
+
+org.quartz.scheduler.skipUpdateCheck = true
+org.quartz.scheduler.instanceName = QuartzScheduler
+org.quartz.scheduler.instanceId = NON_CLUSTERED
+org.quartz.jobStore.class = org.quartz.impl.jdbcjobstore.JobStoreTX
+org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+org.quartz.jobStore.dataSource = quartzDataSource
+org.quartz.jobStore.tablePrefix = QRTZ_
+org.quartz.threadPool.class = org.quartz.simpl.SimpleThreadPool
+org.quartz.threadPool.threadCount = 5
+
+org.quartz.scheduler.idleWaitTime = 3000
+org.quartz.scheduler.dbFailureRetryInterval = 7000
+
+# Persistence Job Store - with database
+org.quartz.dataSource.quartzDataSource.driver = com.mysql.jdbc.Driver
+org.quartz.dataSource.quartzDataSource.URL = jdbc:mysql://localhost:3306/quartz
+org.quartz.dataSource.quartzDataSource.user = quartz
+org.quartz.dataSource.quartzDataSource.password = quartz123
+org.quartz.dataSource.quartzDataSource.maxConnections = 8

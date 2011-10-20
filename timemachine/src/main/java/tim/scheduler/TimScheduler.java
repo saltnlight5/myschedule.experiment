@@ -96,8 +96,8 @@ public class TimScheduler extends AbstractService implements Scheduler {
 	protected void poolJobForExecution(Job job) {
 		logger.debug("Preparing to pool job {} work for execution.", job);
 		
-		Class<? extends Work> workClass = job.getWorkClass();
-		Work work = createInstance(workClass);
+		Class<? extends Task> workClass = job.getWorkClass();
+		Task work = createInstance(workClass);
 		WorkRunner workRunner = new WorkRunner(work);
 		workThreadPool.execute(workRunner);
 		
@@ -114,9 +114,9 @@ public class TimScheduler extends AbstractService implements Scheduler {
 	
 	public class WorkRunner implements Runnable {
 
-		protected Work work;
+		protected Task work;
 		
-		public WorkRunner(Work work) {
+		public WorkRunner(Task work) {
 			this.work = work;
 		}
 		
