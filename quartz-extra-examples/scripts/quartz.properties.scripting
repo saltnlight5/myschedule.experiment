@@ -1,0 +1,14 @@
+# A simple default Quartz Scheduler configuration
+# See http://www.quartz-scheduler.org/docs/configuration
+
+org.quartz.scheduler.skipUpdateCheck = true
+org.quartz.threadPool.class = org.quartz.simpl.SimpleThreadPool
+org.quartz.threadPool.threadCount = 5
+
+# Scripting plugin
+org.quartz.plugin.MyScriptingPlugin.class = myschedule.quartz.extra.ScriptingSchedulerPlugin
+org.quartz.plugin.MyScriptingPlugin.scriptEngineName = Groovy
+#org.quartz.plugin.MyScriptingPlugin.initializeScript = init-samples.groovy
+org.quartz.plugin.MyScriptingPlugin.initializeScript = scripts/init-samples.groovy
+#org.quartz.plugin.MyScriptingPlugin.startScript = my-start.js
+#org.quartz.plugin.MyScriptingPlugin.shutdownScript = my-shutdown.js
