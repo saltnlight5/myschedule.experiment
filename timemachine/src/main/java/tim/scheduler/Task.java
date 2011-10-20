@@ -1,5 +1,5 @@
 package tim.scheduler;
 
-public interface Work {
+public interface Task {
 	void run(SchedulerContext context);
 }
