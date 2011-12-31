@@ -1,0 +1,457 @@
+
+<!-- saved from url=(0046)http://localhost:8080/myschedule/main/job/list -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+
+
+<script src="./MySchedule_files/jquery-1.6.1.js"></script>
+<!--
+<link rel="stylesheet" type="text/css" href="./MySchedule_files/main.css">
+
+<script src="./MySchedule_files/jquery-ui-1.8.13.custom.js"></script>
+<link rel="stylesheet" type="text/css" href="./MySchedule_files/jquery-ui.custom.css">
+
+<script src="./MySchedule_files/jquery.dataTables-1.8.0.js"></script>
+<link rel="stylesheet" type="text/css" href="./MySchedule_files/table_jui.css">
+-->
+<title>MySchedule</title>
+</head>
+
+<body>
+<div id="body-container">
+<div class="header">
+</div><!-- div.header-->
+<div class="big">
+Scheduler: InMemoryScheduler_$_NON_CLUSTERED
+</div>
+
+<!-- A common menu for managing a scheduler -->
+<ul id="menu">
+	<li><a href="./MySchedule_files/MySchedule.htm">Jobs</a></li>
+	<li><a href="http://localhost:8080/myschedule/main/scheduler/summary">Settings</a></li>
+	<li><a href="http://localhost:8080/myschedule/main/scripting/run">Scripting</a></li>
+	<li><a href="http://localhost:8080/myschedule/main/dashboard/list">Dashboard</a></li>
+</ul>
+<div id="submenu">
+<ul>
+<li><a href="./MySchedule_files/MySchedule.htm">Jobs with trigger</a></li>
+<li><a href="http://localhost:8080/myschedule/main/job/list-no-trigger-jobs">Jobs without trigger</a></li>
+<li><a href="http://localhost:8080/myschedule/main/job/list-calendars">Calendars</a></li>
+<li><a href="http://localhost:8080/myschedule/main/job/list-executing-jobs">Currently Executing Jobs</a></li>
+<li><a href="http://localhost:8080/myschedule/main/job/load-xml">Load Jobs (Xml)</a></li>
+</ul>
+</div>
+<script>
+$(document).ready(function() {
+	/*
+	// Use dataTables plugin
+	$("#jobs").dataTable({
+		"aaSorting": [[ 5, "desc" ], [0, "asc"]],
+		"iDisplayLength": 50,
+		"bJQueryUI": true,
+		"sPaginationType": "full_numbers"
+	});
+	*/
+	// Confirm unschedule job
+	$("#unschedule-trigger-confirm").hide();
+	$(".unschedule-trigger").click(function() {
+		var linkUrl = $(this).attr("href");
+		$("#unschedule-trigger-confirm").dialog({
+			resizable: false,
+			height:200,
+			width:400,
+			modal: true,
+			buttons: {
+				"Yes": function() {
+					window.location.href=linkUrl;
+				},
+				Cancel: function() {
+					$(this).dialog("close");
+				}
+			}
+		});
+		return false;
+	});
+	
+	// Confirm pause job
+	$("#pause-trigger-confirm").hide();
+	$(".pause-trigger").click(function() {
+		var linkUrl = $(this).attr("href");
+		$("#pause-trigger-confirm").dialog({
+			resizable: false,
+			height:200,
+			width:400,
+			modal: true,
+			buttons: {
+				"Yes": function() {
+					window.location.href=linkUrl;
+				},
+				Cancel: function() {
+					$(this).dialog("close");
+				}
+			}
+		});
+		return false;
+	});
+	
+	// Confirm resume job
+	$("#resume-trigger-confirm").hide();
+	$(".resume-trigger").click(function() {
+		var linkUrl = $(this).attr("href");
+		$("#resume-trigger-confirm").dialog({
+			resizable: false,
+			height:200,
+			width:400,
+			modal: true,
+			buttons: {
+				"Yes": function() {
+					window.location.href=linkUrl;
+				},
+				Cancel: function() {
+					$(this).dialog("close");
+				}
+			}
+		});
+		return false;
+	});
+});
+</script>
+
+<div id="unschedule-trigger-confirm" title="Unschedule Trigger?" style="display: none; ">
+	<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
+	Are you sure you want to remove this trigger from the scheduler?
+	</p>
+</div>
+<div id="pause-trigger-confirm" title="Pause Trigger?" style="display: none; ">
+	<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
+	Are you sure you want to pause this trigger?
+	</p>
+</div>
+<div id="resume-trigger-confirm" title="Resume Trigger?" style="display: none; ">
+	<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
+	Are you sure you want to resume this trigger?
+	</p>
+</div>
+
+<h1>Jobs with assigned trigger</h1>
+
+
+<div class="dataTables_wrapper" id="jobs_wrapper"><div class="fg-toolbar ui-toolbar ui-widget-header ui-corner-tl ui-corner-tr ui-helper-clearfix"><div id="jobs_length" class="dataTables_length">Show <select size="1" name="jobs_length"><option value="10">10</option><option value="25">25</option><option value="50" selected="selected">50</option><option value="100">100</option></select> entries</div><div id="jobs_filter" class="dataTables_filter">Search: <input type="text"></div></div><table id="jobs" class="display">
+	<thead>
+	<tr><th class="ui-state-default" rowspan="1" colspan="1" style="width: 366px; "><div class="DataTables_sort_wrapper"> JOB <span class="DataTables_sort_icon css_right ui-icon ui-icon-triangle-1-s"></span></div></th><th class="ui-state-default" rowspan="1" colspan="1" style="width: 366px; "><div class="DataTables_sort_wrapper"> TRIGGER <span class="DataTables_sort_icon css_right ui-icon ui-icon-carat-2-n-s"></span></div></th><th class="ui-state-default" rowspan="1" colspan="1" style="width: 447px; "><div class="DataTables_sort_wrapper"> SCHEDULE <span class="DataTables_sort_icon css_right ui-icon ui-icon-carat-2-n-s"></span></div></th><th class="ui-state-default" rowspan="1" colspan="1" style="width: 82px; "><div class="DataTables_sort_wrapper"> NEXT FIRE TIME <span class="DataTables_sort_icon css_right ui-icon ui-icon-carat-2-n-s"></span></div></th><th class="ui-state-default" rowspan="1" colspan="1" style="width: 102px; "><div class="DataTables_sort_wrapper"> ACTIONS <span class="DataTables_sort_icon css_right ui-icon ui-icon-carat-2-n-s"></span></div></th></tr>
+	</thead>
+	
+	
+<tbody><tr class="odd">
+		<td class=" sorting_1 sorting_2"><a href="http://localhost:8080/myschedule/main/job/job-detail?jobName=secondlyJob&jobGroup=DEFAULT">DEFAULT.secondlyJob</a></td>
+		<td><a href="http://localhost:8080/myschedule/main/job/trigger-detail?triggerName=secondlyJob&triggerGroup=DEFAULT&fireTimesCount=20">DEFAULT.secondlyJob</a></td>
+		<td>Repeat=FOREVER, Interval=1000</td>
+		<td>11/12/11 12:12:53</td>
+		<td class="action">
+			<a href="http://localhost:8080/myschedule/main/job/run-job?jobName=secondlyJob&jobGroup=DEFAULT">Run It Now</a> |
+			
+			
+			
+				<a class="pause-trigger" href="http://localhost:8080/myschedule/main/job/pauseTrigger?triggerName=&triggerGroup=">Pause</a>
+			
+			
+			
+			<a class="unschedule-trigger" href="http://localhost:8080/myschedule/main/job/unschedule?triggerName=&triggerGroup=">Unschedule</a>
+		</td>
+	</tr><tr class="even">
+		<td class=" sorting_1 sorting_2"><a href="http://localhost:8080/myschedule/main/job/job-detail?jobName=secondlyCronJob&jobGroup=DEFAULT">DEFAULT.secondlyCronJob</a></td>
+		<td><a href="http://localhost:8080/myschedule/main/job/trigger-detail?triggerName=secondlyCronJob&triggerGroup=DEFAULT&fireTimesCount=20">DEFAULT.secondlyCronJob</a></td>
+		<td>Cron=* * * * * ?</td>
+		<td>11/12/11 12:12:54</td>
+		<td class="action">
+			<a href="http://localhost:8080/myschedule/main/job/run-job?jobName=secondlyCronJob&jobGroup=DEFAULT">Run It Now</a> |
+			
+			
+			
+				<a class="pause-trigger" href="http://localhost:8080/myschedule/main/job/pauseTrigger?triggerName=&triggerGroup=">Pause</a>
+			
+			
+			
+			<a class="unschedule-trigger" href="http://localhost:8080/myschedule/main/job/unschedule?triggerName=&triggerGroup=">Unschedule</a>
+		</td>
+	</tr><tr class="odd">
+		<td class=" sorting_1 sorting_2"><a href="http://localhost:8080/myschedule/main/job/job-detail?jobName=minutelyJob&jobGroup=DEFAULT">DEFAULT.minutelyJob</a></td>
+		<td><a href="http://localhost:8080/myschedule/main/job/trigger-detail?triggerName=minutelyJob&triggerGroup=DEFAULT&fireTimesCount=20">DEFAULT.minutelyJob</a></td>
+		<td>Repeat=FOREVER, Interval=60000</td>
+		<td>11/12/11 12:13:10</td>
+		<td class="action">
+			<a href="http://localhost:8080/myschedule/main/job/run-job?jobName=minutelyJob&jobGroup=DEFAULT">Run It Now</a> |
+			
+			
+			
+				<a class="pause-trigger" href="http://localhost:8080/myschedule/main/job/pauseTrigger?triggerName=&triggerGroup=">Pause</a>
+			
+			
+			
+			<a class="unschedule-trigger" href="http://localhost:8080/myschedule/main/job/unschedule?triggerName=&triggerGroup=">Unschedule</a>
+		</td>
+	</tr><tr class="even">
+		<td class=" sorting_1 sorting_2"><a href="http://localhost:8080/myschedule/main/job/job-detail?jobName=minutelyCronJob&jobGroup=DEFAULT">DEFAULT.minutelyCronJob</a></td>
+		<td><a href="http://localhost:8080/myschedule/main/job/trigger-detail?triggerName=minutelyCronJob&triggerGroup=DEFAULT&fireTimesCount=20">DEFAULT.minutelyCronJob</a></td>
+		<td>Cron=0 * * * JUN,DEC ?</td>
+		<td>12/01/11 00:00:00</td>
+		<td class="action">
+			<a href="http://localhost:8080/myschedule/main/job/run-job?jobName=minutelyCronJob&jobGroup=DEFAULT">Run It Now</a> |
+			
+			
+			
+				<a class="pause-trigger" href="http://localhost:8080/myschedule/main/job/pauseTrigger?triggerName=&triggerGroup=">Pause</a>
+			
+			
+			
+			<a class="unschedule-trigger" href="http://localhost:8080/myschedule/main/job/unschedule?triggerName=&triggerGroup=">Unschedule</a>
+		</td>
+	</tr><tr class="odd">
+		<td class=" sorting_1 sorting_2"><a href="http://localhost:8080/myschedule/main/job/job-detail?jobName=jobWithMutltipleTriggers2&jobGroup=DEFAULT">DEFAULT.jobWithMutltipleTriggers2</a></td>
+		<td><a href="http://localhost:8080/myschedule/main/job/trigger-detail?triggerName=cronTrigger1&triggerGroup=DEFAULT&fireTimesCount=20">DEFAULT.cronTrigger1</a></td>
+		<td>Cron=0 0 * * * ?</td>
+		<td>11/12/11 13:00:00</td>
+		<td class="action">
+			<a href="http://localhost:8080/myschedule/main/job/run-job?jobName=jobWithMutltipleTriggers2&jobGroup=DEFAULT">Run It Now</a> |
+			
+			
+			
+				<a class="pause-trigger" href="http://localhost:8080/myschedule/main/job/pauseTrigger?triggerName=&triggerGroup=">Pause</a>
+			
+			
+			
+			<a class="unschedule-trigger" href="http://localhost:8080/myschedule/main/job/unschedule?triggerName=&triggerGroup=">Unschedule</a>
+		</td>
+	</tr><tr class="even">
+		<td class=" sorting_1 sorting_2"><a href="http://localhost:8080/myschedule/main/job/job-detail?jobName=jobWithMutltipleTriggers2&jobGroup=DEFAULT">DEFAULT.jobWithMutltipleTriggers2</a></td>
+		<td><a href="http://localhost:8080/myschedule/main/job/trigger-detail?triggerName=cronTrigger2&triggerGroup=DEFAULT&fireTimesCount=20">DEFAULT.cronTrigger2</a></td>
+		<td>Cron=0 * * * * ?</td>
+		<td>11/12/11 12:13:00</td>
+		<td class="action">
+			<a href="http://localhost:8080/myschedule/main/job/run-job?jobName=jobWithMutltipleTriggers2&jobGroup=DEFAULT">Run It Now</a> |
+			
+			
+			
+				<a class="pause-trigger" href="http://localhost:8080/myschedule/main/job/pauseTrigger?triggerName=&triggerGroup=">Pause</a>
+			
+			
+			
+			<a class="unschedule-trigger" href="http://localhost:8080/myschedule/main/job/unschedule?triggerName=&triggerGroup=">Unschedule</a>
+		</td>
+	</tr><tr class="odd">
+		<td class=" sorting_1 sorting_2"><a href="http://localhost:8080/myschedule/main/job/job-detail?jobName=jobWithMutltipleTriggers&jobGroup=DEFAULT">DEFAULT.jobWithMutltipleTriggers</a></td>
+		<td><a href="http://localhost:8080/myschedule/main/job/trigger-detail?triggerName=trigger1&triggerGroup=DEFAULT&fireTimesCount=20">DEFAULT.trigger1</a></td>
+		<td>Repeat=FOREVER, Interval=3600000</td>
+		<td>11/12/11 13:12:10</td>
+		<td class="action">
+			<a href="http://localhost:8080/myschedule/main/job/run-job?jobName=jobWithMutltipleTriggers&jobGroup=DEFAULT">Run It Now</a> |
+			
+			
+			
+				<a class="pause-trigger" href="http://localhost:8080/myschedule/main/job/pauseTrigger?triggerName=&triggerGroup=">Pause</a>
+			
+			
+			
+			<a class="unschedule-trigger" href="http://localhost:8080/myschedule/main/job/unschedule?triggerName=&triggerGroup=">Unschedule</a>
+		</td>
+	</tr><tr class="even">
+		<td class=" sorting_1 sorting_2"><a href="http://localhost:8080/myschedule/main/job/job-detail?jobName=jobWithMutltipleTriggers&jobGroup=DEFAULT">DEFAULT.jobWithMutltipleTriggers</a></td>
+		<td><a href="http://localhost:8080/myschedule/main/job/trigger-detail?triggerName=trigger2&triggerGroup=DEFAULT&fireTimesCount=20">DEFAULT.trigger2</a></td>
+		<td>Repeat=FOREVER, Interval=60000</td>
+		<td>11/12/11 12:13:10</td>
+		<td class="action">
+			<a href="http://localhost:8080/myschedule/main/job/run-job?jobName=jobWithMutltipleTriggers&jobGroup=DEFAULT">Run It Now</a> |
+			
+			
+			
+				<a class="pause-trigger" href="http://localhost:8080/myschedule/main/job/pauseTrigger?triggerName=&triggerGroup=">Pause</a>
+			
+			
+			
+			<a class="unschedule-trigger" href="http://localhost:8080/myschedule/main/job/unschedule?triggerName=&triggerGroup=">Unschedule</a>
+		</td>
+	</tr><tr class="odd">
+		<td class=" sorting_1 sorting_2"><a href="http://localhost:8080/myschedule/main/job/job-detail?jobName=hourlyJobWithStartTimeDelay&jobGroup=DEFAULT">DEFAULT.hourlyJobWithStartTimeDelay</a></td>
+		<td><a href="http://localhost:8080/myschedule/main/job/trigger-detail?triggerName=hourlyJobWithStartTimeDelay&triggerGroup=DEFAULT&fireTimesCount=20">DEFAULT.hourlyJobWithStartTimeDelay</a></td>
+		<td>Repeat=FOREVER, Interval=3600000</td>
+		<td>11/12/11 13:12:30</td>
+		<td class="action">
+			<a href="http://localhost:8080/myschedule/main/job/run-job?jobName=hourlyJobWithStartTimeDelay&jobGroup=DEFAULT">Run It Now</a> |
+			
+			
+			
+				<a class="pause-trigger" href="http://localhost:8080/myschedule/main/job/pauseTrigger?triggerName=&triggerGroup=">Pause</a>
+			
+			
+			
+			<a class="unschedule-trigger" href="http://localhost:8080/myschedule/main/job/unschedule?triggerName=&triggerGroup=">Unschedule</a>
+		</td>
+	</tr><tr class="even">
+		<td class=" sorting_1 sorting_2"><a href="http://localhost:8080/myschedule/main/job/job-detail?jobName=hourlyJob2&jobGroup=DEFAULT">DEFAULT.hourlyJob2</a></td>
+		<td><a href="http://localhost:8080/myschedule/main/job/trigger-detail?triggerName=6da64b5bd2ee-e567bb63-ca30-49b8-ab9f-600f1ddd39b0&triggerGroup=DEFAULT&fireTimesCount=20">DEFAULT.6da64b5bd2ee-e567bb63-ca30-49b8-ab9f-600f1ddd39b0</a></td>
+		<td>Repeat=FOREVER, Interval=3600000</td>
+		<td>11/12/11 13:12:10</td>
+		<td class="action">
+			<a href="http://localhost:8080/myschedule/main/job/run-job?jobName=hourlyJob2&jobGroup=DEFAULT">Run It Now</a> |
+			
+			
+			
+				<a class="pause-trigger" href="http://localhost:8080/myschedule/main/job/pauseTrigger?triggerName=&triggerGroup=">Pause</a>
+			
+			
+			
+			<a class="unschedule-trigger" href="http://localhost:8080/myschedule/main/job/unschedule?triggerName=&triggerGroup=">Unschedule</a>
+		</td>
+	</tr><tr class="odd">
+		<td class=" sorting_1 sorting_2"><a href="http://localhost:8080/myschedule/main/job/job-detail?jobName=hourlyJob&jobGroup=DEFAULT">DEFAULT.hourlyJob</a></td>
+		<td><a href="http://localhost:8080/myschedule/main/job/trigger-detail?triggerName=hourlyJob&triggerGroup=DEFAULT&fireTimesCount=20">DEFAULT.hourlyJob</a></td>
+		<td>Repeat=FOREVER, Interval=3600000</td>
+		<td>11/12/11 13:12:10</td>
+		<td class="action">
+			<a href="http://localhost:8080/myschedule/main/job/run-job?jobName=hourlyJob&jobGroup=DEFAULT">Run It Now</a> |
+			
+			
+			
+				<a class="pause-trigger" href="http://localhost:8080/myschedule/main/job/pauseTrigger?triggerName=&triggerGroup=">Pause</a>
+			
+			
+			
+			<a class="unschedule-trigger" href="http://localhost:8080/myschedule/main/job/unschedule?triggerName=&triggerGroup=">Unschedule</a>
+		</td>
+	</tr><tr class="even">
+		<td class=" sorting_1 sorting_2"><a href="http://localhost:8080/myschedule/main/job/job-detail?jobName=hourlyCronJobWithStartTimeDelay&jobGroup=DEFAULT">DEFAULT.hourlyCronJobWithStartTimeDelay</a></td>
+		<td><a href="http://localhost:8080/myschedule/main/job/trigger-detail?triggerName=hourlyCronJobWithStartTimeDelay&triggerGroup=DEFAULT&fireTimesCount=20">DEFAULT.hourlyCronJobWithStartTimeDelay</a></td>
+		<td>Cron=0 0 * * * ?</td>
+		<td>11/12/11 13:00:00</td>
+		<td class="action">
+			<a href="http://localhost:8080/myschedule/main/job/run-job?jobName=hourlyCronJobWithStartTimeDelay&jobGroup=DEFAULT">Run It Now</a> |
+			
+			
+			
+				<a class="pause-trigger" href="http://localhost:8080/myschedule/main/job/pauseTrigger?triggerName=&triggerGroup=">Pause</a>
+			
+			
+			
+			<a class="unschedule-trigger" href="http://localhost:8080/myschedule/main/job/unschedule?triggerName=&triggerGroup=">Unschedule</a>
+		</td>
+	</tr><tr class="odd">
+		<td class=" sorting_1 sorting_2"><a href="http://localhost:8080/myschedule/main/job/job-detail?jobName=hourlyCronJob2&jobGroup=DEFAULT">DEFAULT.hourlyCronJob2</a></td>
+		<td><a href="http://localhost:8080/myschedule/main/job/trigger-detail?triggerName=6da64b5bd2ee-4c50f328-a291-41ef-8ec1-15493b31556e&triggerGroup=DEFAULT&fireTimesCount=20">DEFAULT.6da64b5bd2ee-4c50f328-a291-41ef-8ec1-15493b31556e</a></td>
+		<td>Cron=0 0 * * * ?</td>
+		<td>11/12/11 13:00:00</td>
+		<td class="action">
+			<a href="http://localhost:8080/myschedule/main/job/run-job?jobName=hourlyCronJob2&jobGroup=DEFAULT">Run It Now</a> |
+			
+			
+			
+				<a class="pause-trigger" href="http://localhost:8080/myschedule/main/job/pauseTrigger?triggerName=&triggerGroup=">Pause</a>
+			
+			
+			
+			<a class="unschedule-trigger" href="http://localhost:8080/myschedule/main/job/unschedule?triggerName=&triggerGroup=">Unschedule</a>
+		</td>
+	</tr><tr class="even">
+		<td class=" sorting_1 sorting_2"><a href="http://localhost:8080/myschedule/main/job/job-detail?jobName=hourlyCronJob&jobGroup=DEFAULT">DEFAULT.hourlyCronJob</a></td>
+		<td><a href="http://localhost:8080/myschedule/main/job/trigger-detail?triggerName=hourlyCronJob&triggerGroup=DEFAULT&fireTimesCount=20">DEFAULT.hourlyCronJob</a></td>
+		<td>Cron=0 0 * ? * MON-FRI</td>
+		<td>11/14/11 00:00:00</td>
+		<td class="action">
+			<a href="http://localhost:8080/myschedule/main/job/run-job?jobName=hourlyCronJob&jobGroup=DEFAULT">Run It Now</a> |
+			
+			
+			
+				<a class="pause-trigger" href="http://localhost:8080/myschedule/main/job/pauseTrigger?triggerName=&triggerGroup=">Pause</a>
+			
+			
+			
+			<a class="unschedule-trigger" href="http://localhost:8080/myschedule/main/job/unschedule?triggerName=&triggerGroup=">Unschedule</a>
+		</td>
+	</tr><tr class="odd">
+		<td class=" sorting_1 sorting_2"><a href="http://localhost:8080/myschedule/main/job/job-detail?jobName=dailyTimeIntervalJob&jobGroup=DEFAULT">DEFAULT.dailyTimeIntervalJob</a></td>
+		<td><a href="http://localhost:8080/myschedule/main/job/trigger-detail?triggerName=6da64b5bd2ee-0fee6ad7-28c9-43e2-8d2a-8750b8c4d967&triggerGroup=DEFAULT&fireTimesCount=20">DEFAULT.6da64b5bd2ee-0fee6ad7-28c9-43e2-8d2a-8750b8c4d967</a></td>
+		<td>org.quartz.impl.triggers.DailyTimeIntervalTriggerImpl</td>
+		<td>11/14/11 08:00:00</td>
+		<td class="action">
+			<a href="http://localhost:8080/myschedule/main/job/run-job?jobName=dailyTimeIntervalJob&jobGroup=DEFAULT">Run It Now</a> |
+			
+			
+			
+				<a class="pause-trigger" href="http://localhost:8080/myschedule/main/job/pauseTrigger?triggerName=&triggerGroup=">Pause</a>
+			
+			
+			
+			<a class="unschedule-trigger" href="http://localhost:8080/myschedule/main/job/unschedule?triggerName=&triggerGroup=">Unschedule</a>
+		</td>
+	</tr><tr class="even">
+		<td class=" sorting_1 sorting_2"><a href="http://localhost:8080/myschedule/main/job/job-detail?jobName=CalJob3&jobGroup=DEFAULT">DEFAULT.CalJob3</a></td>
+		<td><a href="http://localhost:8080/myschedule/main/job/trigger-detail?triggerName=CalJob3&triggerGroup=DEFAULT&fireTimesCount=20">DEFAULT.CalJob3</a></td>
+		<td>Cron=0 0 * * * ?</td>
+		<td>11/12/11 14:00:00</td>
+		<td class="action">
+			<a href="http://localhost:8080/myschedule/main/job/run-job?jobName=CalJob3&jobGroup=DEFAULT">Run It Now</a> |
+			
+			
+			
+				<a class="pause-trigger" href="http://localhost:8080/myschedule/main/job/pauseTrigger?triggerName=&triggerGroup=">Pause</a>
+			
+			
+			
+			<a class="unschedule-trigger" href="http://localhost:8080/myschedule/main/job/unschedule?triggerName=&triggerGroup=">Unschedule</a>
+		</td>
+	</tr><tr class="odd">
+		<td class=" sorting_1 sorting_2"><a href="http://localhost:8080/myschedule/main/job/job-detail?jobName=CalJob2&jobGroup=DEFAULT">DEFAULT.CalJob2</a></td>
+		<td><a href="http://localhost:8080/myschedule/main/job/trigger-detail?triggerName=CalJob2&triggerGroup=DEFAULT&fireTimesCount=20">DEFAULT.CalJob2</a></td>
+		<td>Cron=0 0 * * * ?</td>
+		<td>11/12/11 13:00:00</td>
+		<td class="action">
+			<a href="http://localhost:8080/myschedule/main/job/run-job?jobName=CalJob2&jobGroup=DEFAULT">Run It Now</a> |
+			
+			
+			
+				<a class="pause-trigger" href="http://localhost:8080/myschedule/main/job/pauseTrigger?triggerName=&triggerGroup=">Pause</a>
+			
+			
+			
+			<a class="unschedule-trigger" href="http://localhost:8080/myschedule/main/job/unschedule?triggerName=&triggerGroup=">Unschedule</a>
+		</td>
+	</tr><tr class="even">
+		<td class=" sorting_1 sorting_2"><a href="http://localhost:8080/myschedule/main/job/job-detail?jobName=CalJob&jobGroup=DEFAULT">DEFAULT.CalJob</a></td>
+		<td><a href="http://localhost:8080/myschedule/main/job/trigger-detail?triggerName=CalJob1&triggerGroup=DEFAULT&fireTimesCount=20">DEFAULT.CalJob1</a></td>
+		<td>Cron=0 0 * * * ?</td>
+		<td>11/14/11 00:00:00</td>
+		<td class="action">
+			<a href="http://localhost:8080/myschedule/main/job/run-job?jobName=CalJob&jobGroup=DEFAULT">Run It Now</a> |
+			
+			
+			
+				<a class="pause-trigger" href="http://localhost:8080/myschedule/main/job/pauseTrigger?triggerName=&triggerGroup=">Pause</a>
+			
+			
+			
+			<a class="unschedule-trigger" href="http://localhost:8080/myschedule/main/job/unschedule?triggerName=&triggerGroup=">Unschedule</a>
+		</td>
+	</tr><tr class="odd">
+		<td class=" sorting_1 sorting_2"><a href="http://localhost:8080/myschedule/main/job/job-detail?jobName=calendarIntervalJob&jobGroup=DEFAULT">DEFAULT.calendarIntervalJob</a></td>
+		<td><a href="http://localhost:8080/myschedule/main/job/trigger-detail?triggerName=6da64b5bd2ee-0de515b1-13f7-4558-9982-ab611d7772b6&triggerGroup=DEFAULT&fireTimesCount=20">DEFAULT.6da64b5bd2ee-0de515b1-13f7-4558-9982-ab611d7772b6</a></td>
+		<td>org.quartz.impl.triggers.CalendarIntervalTriggerImpl</td>
+		<td>02/12/12 12:12:22</td>
+		<td class="action">
+			<a href="http://localhost:8080/myschedule/main/job/run-job?jobName=calendarIntervalJob&jobGroup=DEFAULT">Run It Now</a> |
+			
+			
+			
+				<a class="pause-trigger" href="http://localhost:8080/myschedule/main/job/pauseTrigger?triggerName=&triggerGroup=">Pause</a>
+			
+			
+			
+			<a class="unschedule-trigger" href="http://localhost:8080/myschedule/main/job/unschedule?triggerName=&triggerGroup=">Unschedule</a>
+		</td>
+	</tr></tbody></table><div class="fg-toolbar ui-toolbar ui-widget-header ui-corner-bl ui-corner-br ui-helper-clearfix"><div class="dataTables_info" id="jobs_info">Showing 1 to 19 of 19 entries</div><div class="dataTables_paginate fg-buttonset ui-buttonset fg-buttonset-multi ui-buttonset-multi paging_full_numbers" id="jobs_paginate"><span class="first ui-corner-tl ui-corner-bl fg-button ui-button ui-state-default ui-state-disabled" id="jobs_first">First</span><span class="previous fg-button ui-button ui-state-default ui-state-disabled" id="jobs_previous">Previous</span><span><span class="fg-button ui-button ui-state-default ui-state-disabled">1</span></span><span class="next fg-button ui-button ui-state-default ui-state-disabled" id="jobs_next">Next</span><span class="last ui-corner-tr ui-corner-br fg-button ui-button ui-state-default ui-state-disabled" id="jobs_last">Last</span></div></div></div> <!-- jobs-with-triggers -->
+<div id="footer">
+	<div id="productInfo">
+		<a href="http://localhost:8080/myschedule/main/about">myschedule-2.2.0-SNAPSHOT</a> - Managing Quartz Schedulers with Ease.
+	</div>
+</div><!-- div.footer -->
+
+</div><!-- body-container -->
+
+</body></html>
