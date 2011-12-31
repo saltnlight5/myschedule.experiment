@@ -1,4 +1,4 @@
-package tim.scheduler;
+package deng.timemachine;
 
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
@@ -7,9 +7,9 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TimScheduler extends AbstractService implements Scheduler {
+public class SchedulerImpl extends AbstractService implements Scheduler {
 	
-	private static final Logger logger = LoggerFactory.getLogger(TimScheduler.class);
+	private static final Logger logger = LoggerFactory.getLogger(SchedulerImpl.class);
 	protected SchedulerConfig config;			
 	protected String name;
 	protected Store store;
@@ -122,7 +122,7 @@ public class TimScheduler extends AbstractService implements Scheduler {
 		
 		@Override
 		public void run() {
-			SchedulerContext schedulerCtx = new TimSchedulerContext(TimScheduler.this);
+			SchedulerContext schedulerCtx = new SchedulerContextImpl(SchedulerImpl.this);
 			work.run(schedulerCtx);
 		}
 	}

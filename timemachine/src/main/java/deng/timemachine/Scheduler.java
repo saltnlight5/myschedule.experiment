@@ -1,4 +1,4 @@
-package tim.scheduler;
+package deng.timemachine;
 
 public interface Scheduler extends Service {
 	
