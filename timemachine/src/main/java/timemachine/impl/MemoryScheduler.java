@@ -16,6 +16,7 @@ public class MemoryScheduler implements Scheduler {
 	private AtomicBoolean inited = new AtomicBoolean(false);
 	private AtomicBoolean started = new AtomicBoolean(false);
 	private MemoryIdGenerator idGenerator = new MemoryIdGenerator();
+	private MemoryDataStore dataStore = new MemoryDataStore();
 	
 	@Override
 	public Long getId() {
@@ -79,15 +80,13 @@ public class MemoryScheduler implements Scheduler {
 		if (job == null || schedule == null)
 			throw new SchedulerException("Failed to schedule job: Job or schedule is not set.");
 		
-		if (job.getId() == null)
-			job.setId(idGenerator.generateId(Job.class.getName()));
-		if (schedule.getId() == null)
-			schedule.setId(idGenerator.generateId(Job.class.getName()));
 		logger.info("Scheduling {} with {}", job, schedule);
-		
 		if (job.getTaskClass() == null)
 			throw new SchedulerException("Failed to schedule job: Job.taskClass is not set.");
 		
-		// TODO: how to schedule and run the job.
+		dataStore.storeData(job);
+		dataStore.storeData(schedule);
+		
+		// TODO: signal scheduler thread there is new data.
 	}
 }

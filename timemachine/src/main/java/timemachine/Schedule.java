@@ -1,6 +1,6 @@
 package timemachine;
 
-public class Schedule {
+public class Schedule implements Data {
 	private Long id;
 	private String name;
 	private String desc;
@@ -20,6 +20,6 @@ public class Schedule {
 	
 	@Override
 	public String toString() {
-		return "Schedule[id=" + id + ", name=" + name + ", desc=" + desc + "]";
+		return getClass().getSimpleName() + "[id=" + id + ", name=" + name + ", desc=" + desc + "]";
 	}
 }

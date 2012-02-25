@@ -36,5 +36,11 @@ public class MemorySchedulerTest {
 		job.setTaskClass(LoggerJobTask.class);
 		Schedule schedule = new Schedule();
 		scheduler.schedule(job, schedule);
+		
+		// second job
+		job = new Job();
+		job.setTaskClass(LoggerJobTask.class);
+		schedule = new Schedule();
+		scheduler.schedule(job, schedule);
 	}
 }

@@ -1,6 +1,6 @@
 package timemachine;
 
-public class Job {
+public class Job implements Data {
 	private Long id;
 	private String name;
 	private Class<? extends JobTask> taskClass;
@@ -27,6 +27,6 @@ public class Job {
 	@Override
 	public String toString() {
 		String taskClassStr = (taskClass != null) ? taskClass.getName() : "null";
-		return "Job[id=" + id + ", name=" + name + ", taskClass=" + taskClassStr + "]";
+		return getClass().getSimpleName() + "[id=" + id + ", name=" + name + ", taskClass=" + taskClassStr + "]";
 	}
 }

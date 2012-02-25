@@ -33,7 +33,7 @@ public class JobContextImpl implements JobContext {
 	
 	@Override
 	public String toString() {
-		return "JobContext[job.id=" + job.getId() + 
+		return getClass().getSimpleName() + "[job.id=" + job.getId() + 
 			", schedule.id=" + schedule.getId() + 
 			", scheduler.id=" + scheduler.getId() + "]";
 	}
