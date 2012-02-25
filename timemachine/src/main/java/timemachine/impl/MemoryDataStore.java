@@ -17,9 +17,13 @@ import timemachine.SchedulerException;
 
 public class MemoryDataStore implements DataStore {
 	private static Logger logger = LoggerFactory.getLogger(MemoryScheduler.class);
-	private MemoryIdGenerator idGenerator = new MemoryIdGenerator();
 	private Map<Long, Job> jobs = Collections.synchronizedMap(new HashMap<Long, Job>());
 	private Map<Long, Schedule> schedules = Collections.synchronizedMap(new HashMap<Long, Schedule>());
+	private MemoryIdGenerator idGenerator;
+	
+	public MemoryDataStore(MemoryIdGenerator idGenerator) {
+		this.idGenerator = idGenerator;
+	}
 
 	@Override
 	public void storeData(Data data) {

@@ -1,5 +1,7 @@
 package timemachine.impl;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
@@ -15,8 +17,10 @@ public class MemoryScheduler implements Scheduler {
 	private Long id;
 	private AtomicBoolean inited = new AtomicBoolean(false);
 	private AtomicBoolean started = new AtomicBoolean(false);
-	private MemoryIdGenerator idGenerator = new MemoryIdGenerator();
-	private MemoryDataStore dataStore = new MemoryDataStore();
+	private MemoryIdGenerator idGenerator;
+	private MemoryDataStore dataStore;
+	private ExecutorService threadPool;
+	private SchedulerRunner schedulerRunner;
 	
 	@Override
 	public Long getId() {
@@ -25,28 +29,35 @@ public class MemoryScheduler implements Scheduler {
 
 	@Override
 	public void init() {
+		// Scheduler Id
+		idGenerator = new MemoryIdGenerator();
 		if (id == null)
 			id = idGenerator.generateId(MemoryScheduler.class.getName());
 		logger.debug("Initializing {}", this);
 		
+		// ThreadPool
+		int maxJobTaskPoolSize = 2; 
+		threadPool = Executors.newFixedThreadPool(maxJobTaskPoolSize + 1); // one extra for schedulerRunner
+		
+		// DataStore
+		dataStore = new MemoryDataStore(idGenerator);
+
+		// Scheduler Runner
+		schedulerRunner = new SchedulerRunner(this, dataStore);
+		
+		//Done
 		inited.set(true);
 		logger.info("{} initialized.", this);
 	}
-
-	@Override
-	public void destroy() {
-		logger.debug("Destroying {}", this);
-		if (started.get())
-			stop();
-		inited.set(false);
-		logger.info("{} destroyed.", this);
-	}
-
+	
 	@Override
 	public void start() {
 		logger.debug("Staring {}", this);
 		if (!inited.get())
 			init();
+		
+		threadPool.execute(schedulerRunner); // Add the scheduler runner into a thread pool to start jobs check loop.
+		
 		started.set(true);
 		logger.info("{} started.", this);
 	}
@@ -55,7 +66,42 @@ public class MemoryScheduler implements Scheduler {
 	public void stop() {
 		logger.debug("Stopping {}", this);
 		started.set(false);
+		
+		schedulerRunner.stop(); // This will get this runner exit the run() and out of the thread pool.
 		logger.info("{} stopped.", this);
+	}
+
+	@Override
+	public void destroy() {
+		logger.debug("Destroying {}", this);
+		if (started.get())
+			stop();
+		
+		threadPool.shutdown();
+
+		inited.set(false);
+		logger.info("{} destroyed.", this);
+	}
+	
+	@Override
+	public void pause() {
+		if (!started.get())
+			throw new SchedulerException("Failed to pause scheduler: It has not started yet.");
+		schedulerRunner.pause();
+		logger.info("{} paused.", this);
+	}
+
+	@Override
+	public void resume() {
+		if (!started.get())
+			throw new SchedulerException("Failed to pause scheduler: It has not started yet.");
+		schedulerRunner.resume();
+		logger.info("{} resumed.", this);
+	}
+
+	@Override
+	public boolean isPaused() {
+		return schedulerRunner != null && schedulerRunner.isPaused();
 	}
 	
 	@Override
@@ -87,6 +133,6 @@ public class MemoryScheduler implements Scheduler {
 		dataStore.storeData(job);
 		dataStore.storeData(schedule);
 		
-		// TODO: signal scheduler thread there is new data.
+		schedulerRunner.schedulerChanged();
 	}
 }
