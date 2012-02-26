@@ -1,15 +1,18 @@
-package timemachine;
+package unit.timemachine;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-public class MemorySchedulerTest {
+import timemachine.Scheduler;
+import timemachine.TimeMachineScheduler;
+
+public class TimeSchedulerSchedulerTest {
 	
 	@Test
 	public void testSchedulerLifecycles() throws Exception {
-		Scheduler scheduler = new MemoryScheduler();
+		Scheduler scheduler = new TimeMachineScheduler();
 		assertThat(scheduler.isInited(), is(false));
 		assertThat(scheduler.isStarted(), is(false));
 		assertThat(scheduler.isPaused(), is(false));
@@ -47,7 +50,7 @@ public class MemorySchedulerTest {
 	
 	@Test
 	public void testSchedulerStartStop() throws Exception {
-		Scheduler scheduler = new MemoryScheduler();
+		Scheduler scheduler = new TimeMachineScheduler();
 		assertThat(scheduler.isInited(), is(false));
 		assertThat(scheduler.isStarted(), is(false));
 		assertThat(scheduler.isPaused(), is(false));
@@ -65,7 +68,7 @@ public class MemorySchedulerTest {
 	
 	@Test
 	public void testSchedulerReStart() throws Exception {
-		Scheduler scheduler = new MemoryScheduler();
+		Scheduler scheduler = new TimeMachineScheduler();
 		assertThat(scheduler.isInited(), is(false));
 		assertThat(scheduler.isStarted(), is(false));
 		
@@ -86,39 +89,5 @@ public class MemorySchedulerTest {
 		scheduler.destroy();
 		assertThat(scheduler.isInited(), is(false));
 		assertThat(scheduler.isStarted(), is(false));
-	}
-	
-	@Test
-	public void testScheduleJob() {
-		// We will schedule/add jobs without starting the scheduler.
-		Scheduler scheduler = new MemoryScheduler();
-		scheduler.init();
-		
-		Job job = new Job();
-		job.setTaskClass(LoggerJobTask.class);
-		job.addSchedule(new FixedIntervalSchedule());
-		scheduler.schedule(job);
-		
-		// second job
-		job = new Job();
-		job.setTaskClass(LoggerJobTask.class);
-		job.addSchedule(new FixedIntervalSchedule());
-		scheduler.schedule(job);
-	}
-	
-	@Test
-	public void testSchedulerRunner() throws Exception {
-		Scheduler scheduler = new MemoryScheduler();
-		scheduler.start();
-		Thread.sleep(3000L);
-		
-		// Schedule a job and let scheduler run for 5 secs.
-		Job job = new Job();
-		job.setTaskClass(LoggerJobTask.class);
-		job.addSchedule(new FixedIntervalSchedule(2, ScheduleUnit.SECONDS));
-		scheduler.schedule(job);
-		Thread.sleep(10000L);
-		
-		scheduler.destroy();
 	}
 }

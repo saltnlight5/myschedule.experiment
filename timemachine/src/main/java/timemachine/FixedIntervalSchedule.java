@@ -2,6 +2,8 @@ package timemachine;
 
 import java.util.Date;
 
+import timemachine.support.AbstractSchedule;
+
 
 public class FixedIntervalSchedule extends AbstractSchedule {
 	private Integer interval;
@@ -40,15 +42,15 @@ public class FixedIntervalSchedule extends AbstractSchedule {
 	private Long covertToMillis(int interval, ScheduleUnit unit) {
 		long result;
 		if (unit == ScheduleUnit.SECONDS)
-			result = DateUtil.MILLIS_IN_SECOND;
+			result = DateUtil.MILLIS_IN_SECOND * interval;
 		else if (unit == ScheduleUnit.MINUTES)
-			result = DateUtil.MILLIS_IN_MINUTE;
+			result = DateUtil.MILLIS_IN_MINUTE * interval;
 		else if (unit == ScheduleUnit.HOURS)
-			result = DateUtil.MILLIS_IN_HOUR;
+			result = DateUtil.MILLIS_IN_HOUR * interval;
 		else if (unit == ScheduleUnit.DAYS)
-			result = DateUtil.MILLIS_IN_DAY;
+			result = DateUtil.MILLIS_IN_DAY * interval;
 		else if (unit == ScheduleUnit.WEEKS)
-			result = DateUtil.MILLIS_IN_WEEK;
+			result = DateUtil.MILLIS_IN_WEEK * interval;
 		else
 			throw new SchedulerException("Failed to create schedule: Invalid unit=" + unit);
 			
@@ -57,12 +59,18 @@ public class FixedIntervalSchedule extends AbstractSchedule {
 	
 	@Override
 	public Date computeNextRun(Date after) {
-		long afterTime = after.getTime() + DateUtil.MILLIS_IN_SECOND; // Increment to the smallest unit in scheudler.
+		if (after == null)
+			return null;
+		long afterTimeMillis = addAndResetNextRunDate(after).getTime();
 		long startTimeMillis = startTime.getTime();
 		long unitMillis = getIntervalInMillis();
-		long numOfUnitPassed = (afterTime - startTimeMillis) / unitMillis;
-		long nextRunTime = startTimeMillis + (numOfUnitPassed * unitMillis) + unitMillis;
-		Date result = new Date(nextRunTime);
+		long numOfUnitPassed = (afterTimeMillis - startTimeMillis) / unitMillis;
+		//org.slf4j.LoggerFactory.getLogger(getClass()).info("afterTimeMillis=" + afterTimeMillis + ", startTimeMillis=" + startTimeMillis + ", unitMillis=" + unitMillis + ", numOfUnitPassed=" + numOfUnitPassed);
+		
+		long nextRunTimeMillis = startTimeMillis + (numOfUnitPassed * unitMillis);
+		while(nextRunTimeMillis < afterTimeMillis)
+			nextRunTimeMillis += unitMillis;
+		Date result = new Date(nextRunTimeMillis);
 		return result;
 	}
 }

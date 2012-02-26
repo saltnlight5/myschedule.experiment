@@ -1,11 +1,16 @@
-package timemachine;
+package timemachine.support;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import timemachine.DateUtil;
+import timemachine.Job;
+import timemachine.Schedule;
 
-public abstract class AbstractSchedule implements Schedule, Comparable<Schedule> {
+
+public abstract class AbstractSchedule extends AbstractData implements Schedule {
 	protected Long id;
 	protected String name;
 	protected String desc;
@@ -54,9 +59,14 @@ public abstract class AbstractSchedule implements Schedule, Comparable<Schedule>
 		this.startTime = startTime;
 	}
 	
-	@Override
-	public String toString() {
-		return getClass().getSimpleName() + "[id=" + id + ", name=" + name + "]";
+	public List<Date> computeNexRunDates(Date after, int maxCount) {
+		List<Date> result = new ArrayList<Date>();
+		Date nextRunDate = after;
+		for (int i=0; i<maxCount; i++) {
+			nextRunDate = computeNextRun(nextRunDate);
+			result.add(nextRunDate);
+		}
+		return result;
 	}
 	
 	@Override
@@ -70,5 +80,13 @@ public abstract class AbstractSchedule implements Schedule, Comparable<Schedule>
 			return 1;
 		else
 			return 0;
+	}
+
+	/** Reset the smallest field and add by one unit to move forward the date time value for calculation. */
+	protected Date addAndResetNextRunDate(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.MILLISECOND, 0);
+		return new Date(cal.getTime().getTime() +  + DateUtil.MILLIS_IN_SECOND);
 	}
 }

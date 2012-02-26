@@ -1,4 +1,4 @@
-package timemachine;
+package timemachine.support;
 
 import java.util.Date;
 import java.util.List;
@@ -8,22 +8,50 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import timemachine.DataStore;
+import timemachine.DateUtil;
+import timemachine.Job;
+import timemachine.JobContext;
+import timemachine.Schedule;
+import timemachine.Scheduler;
+
+
 
 public class SchedulerRunner implements Runnable {
 	public static final long MAX_SCHEDULER_CHECK_INTERVAL = DateUtil.MILLIS_IN_HOUR;
+	public static final long MIN_SCHEDULER_CHECK_INTERVAL = DateUtil.MILLIS_IN_SECOND;
 	private static Logger logger = LoggerFactory.getLogger(SchedulerRunner.class);
+	private long maxSchedulerCheckInterval = MAX_SCHEDULER_CHECK_INTERVAL;
+	private long minSchedulerCheckInterval = MIN_SCHEDULER_CHECK_INTERVAL;
 	private long schedulerCheckInterval = MAX_SCHEDULER_CHECK_INTERVAL;
 	private AtomicBoolean running = new AtomicBoolean(false);
 	private AtomicBoolean paused = new AtomicBoolean(false);
 	private Scheduler scheduler;
-	int batchSize= 1;
-	long batchWindowsInMillis = DateUtil.MILLIS_IN_SECOND;
+	int batchSize;
+	long batchWindowsInMillis;
 	private ExecutorService jobThreadPool;
 	
-	public SchedulerRunner(Scheduler scheduler, ExecutorService jobThreadPool) {
+	public void setSchedulerCheckInterval(long schedulerCheckInterval) {
+		this.schedulerCheckInterval = schedulerCheckInterval;
+	}
+	public void setMaxSchedulerCheckInterval(long maxSchedulerCheckInterval) {
+		this.maxSchedulerCheckInterval = maxSchedulerCheckInterval;
+	}
+	public void setMinSchedulerCheckInterval(long minSchedulerCheckInterval) {
+		this.minSchedulerCheckInterval = minSchedulerCheckInterval;
+	}
+	public void setScheduler(Scheduler scheduler) {
 		this.scheduler = scheduler;
+	}
+	public void setJobThreadPool(ExecutorService jobThreadPool) {
 		this.jobThreadPool = jobThreadPool;
 	}
+	public void setBatchSize(int batchSize) {
+		this.batchSize = batchSize;
+	}
+	public void setBatchWindowsInMillis(long batchWindowsInMillis) {
+		this.batchWindowsInMillis = batchWindowsInMillis;
+	}	
 	
 	public void wakeUpSleepCycle() {
 		// Await any blocking instances
@@ -97,8 +125,9 @@ public class SchedulerRunner implements Runnable {
 		}
 
 		// Adjust sleep cycle if necessary.
-		Date earliestTime = dataStore.getEarliestRunTime();
-		updateSchedulerCheckInterval(earliestTime);
+		Date earliestNextRunTime = dataStore.getEarliestRunTime();
+		logger.debug("The earliestNextRunTime={} is used to update scheduler check internal.", earliestNextRunTime);
+		updateSchedulerCheckInterval(earliestNextRunTime);
 	}
 
 	private void runJob(Job job, Schedule schedule) {
@@ -109,39 +138,19 @@ public class SchedulerRunner implements Runnable {
 
 	private void updateSchedulerCheckInterval(Date earliestTime) {
 		long gap = earliestTime.getTime() - System.currentTimeMillis();
-		gap -= batchWindowsInMillis - 1; // We want scheduler to start checking a little early
-		if (gap <= 0)
-			gap = 1; // This will ensure we do put sleep with 0, which is infinity, or any negative values (past due).
+		gap -= minSchedulerCheckInterval; // We want scheduler to start checking a little early
 		
-		if (gap < MAX_SCHEDULER_CHECK_INTERVAL) {
+		// Note: careful not to use zero, b/c it will sleep forever!
+		if (gap <= 0)
+			gap = minSchedulerCheckInterval;
+		
+		if (gap < maxSchedulerCheckInterval) {
 			schedulerCheckInterval = gap;
 			return;
-		} 
-		if (schedulerCheckInterval != MAX_SCHEDULER_CHECK_INTERVAL) {
-			schedulerCheckInterval = MAX_SCHEDULER_CHECK_INTERVAL;
-		}
-	}
-	
-	public static class JobRunner implements Runnable {
-		private JobContext jobContext;
-		public JobRunner(JobContext jobContext) {
-			this.jobContext = jobContext;
-		}
-		@Override
-		public void run() {
-			Job job = jobContext.getJob();
-			Class<? extends JobTask> jobTaskClass = job.getTaskClass();
-			logger.debug("Creating jobTask instance " + jobTaskClass.getName());
-			try {
-				JobTask task = jobTaskClass.newInstance();
-				logger.info("Running jobTask: " + task);
-				task.run(jobContext);
-			} catch (InstantiationException e) {
-				throw new SchedulerException("Failed to create JobTask: " + jobTaskClass, e);
-			} catch (IllegalAccessException e) {
-				throw new SchedulerException("Failed to create JobTask: " + jobTaskClass, e);
-			}
 		}
 		
+		if (schedulerCheckInterval != maxSchedulerCheckInterval) {
+			schedulerCheckInterval = maxSchedulerCheckInterval;
+		}
 	}
 }

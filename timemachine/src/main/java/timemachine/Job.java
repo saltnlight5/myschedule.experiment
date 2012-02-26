@@ -3,18 +3,13 @@ package timemachine;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Job implements Data {
-	private Long id;
+import timemachine.support.AbstractData;
+
+public class Job extends AbstractData {
 	private String name;
 	private Class<? extends JobTask> taskClass;
 	private List<Schedule> schedules = new ArrayList<Schedule>();
 	
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
 	public String getName() {
 		return name;
 	}
@@ -36,10 +31,5 @@ public class Job implements Data {
 	public void addSchedule(Schedule schedule) {
 		schedules.add(schedule);
 		schedule.addJob(this); //Ensure we tight both side association.
-	}
-	
-	@Override
-	public String toString() {
-		return getClass().getSimpleName() + "[id=" + id + ", name=" + name + "]";
 	}
 }

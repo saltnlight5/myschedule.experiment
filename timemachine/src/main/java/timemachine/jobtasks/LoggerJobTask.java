@@ -1,7 +1,10 @@
-package timemachine;
+package timemachine.jobtasks;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import timemachine.JobContext;
+import timemachine.JobTask;
 
 
 public class LoggerJobTask implements JobTask {

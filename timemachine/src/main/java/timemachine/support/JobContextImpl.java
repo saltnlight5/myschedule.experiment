@@ -1,4 +1,10 @@
-package timemachine;
+package timemachine.support;
+
+import timemachine.Job;
+import timemachine.JobContext;
+import timemachine.Schedule;
+import timemachine.Scheduler;
+
 
 
 public class JobContextImpl implements JobContext {

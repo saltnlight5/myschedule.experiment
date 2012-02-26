@@ -13,16 +13,16 @@ import org.slf4j.LoggerFactory;
 
 
 public class MemoryDataStore implements DataStore {
-	private static Logger logger = LoggerFactory.getLogger(MemoryScheduler.class);
+	private static Logger logger = LoggerFactory.getLogger(MemoryDataStore.class);
 	/** Map of Job per id as key */
 	private Map<Long, Job> jobs = Collections.synchronizedMap(new HashMap<Long, Job>());
 	/** Map of Schedule per id as key */
 	private Map<Long, Schedule> schedules = Collections.synchronizedMap(new HashMap<Long, Schedule>());
 	/** List of sorted nextRun schedule ids. */
 	private PriorityQueue<Schedule> schedulesQueue = new PriorityQueue<Schedule>();
-	private MemoryIdGenerator idGenerator;
-	
-	public MemoryDataStore(MemoryIdGenerator idGenerator) {
+	private IdGenerator idGenerator;
+
+	public void setIdGenerator(IdGenerator idGenerator) {
 		this.idGenerator = idGenerator;
 	}
 
@@ -89,9 +89,13 @@ public class MemoryDataStore implements DataStore {
 	public Data deleteData(Long id, Class<? extends Data> dataType) {
 		Data result = null;
 		if (Job.class.equals(dataType)) {
-			result = jobs.remove(id);
+			Job job = jobs.remove(id);
+			for (Schedule schedule : job.getSchedules()) {
+				if (schedule.getJobs().size() == 0)
+					removeSchedule(schedule.getId());
+			}
 		} else if(Schedule.class.equals(dataType)) {
-			result = schedules.remove(id);
+			result = removeSchedule(id);
 		} else {
 			throw new SchedulerException("Failed to delete data: Invalid dataType=" + dataType.getName());
 		}
@@ -100,6 +104,18 @@ public class MemoryDataStore implements DataStore {
 		
 		logger.info("Deleted dataType={} with id={}", dataType.getName(), id);
 		return result;
+	}
+	
+	private Schedule removeSchedule(Long id) {
+		Schedule schedule = schedules.remove(id);
+		schedulesQueue.remove(schedule);
+		
+		// Remove all job references
+		for (Job job : schedule.getJobs()) {
+			job.getSchedules().remove(schedule);
+		}
+		
+		return schedule;
 	}
 
 	@Override
