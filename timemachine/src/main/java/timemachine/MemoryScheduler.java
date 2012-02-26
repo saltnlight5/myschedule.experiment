@@ -1,4 +1,4 @@
-package timemachine.impl;
+package timemachine;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -7,10 +7,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import timemachine.Job;
-import timemachine.Schedule;
-import timemachine.Scheduler;
-import timemachine.SchedulerException;
 
 public class MemoryScheduler implements Scheduler {
 	private static Logger logger = LoggerFactory.getLogger(MemoryScheduler.class);
@@ -25,6 +21,11 @@ public class MemoryScheduler implements Scheduler {
 	@Override
 	public Long getId() {
 		return id;
+	}
+	
+	@Override
+	public DataStore getDataStore() {
+		return dataStore;
 	}
 
 	@Override
@@ -43,7 +44,7 @@ public class MemoryScheduler implements Scheduler {
 		dataStore = new MemoryDataStore(idGenerator);
 
 		// Scheduler Runner
-		schedulerRunner = new SchedulerRunner(this, dataStore);
+		schedulerRunner = new SchedulerRunner(this);
 		
 		//Done
 		inited.set(true);
@@ -126,13 +127,15 @@ public class MemoryScheduler implements Scheduler {
 		if (job == null || schedule == null)
 			throw new SchedulerException("Failed to schedule job: Job or schedule is not set.");
 		
-		logger.info("Scheduling {} with {}", job, schedule);
+		logger.debug("Scheduling {} with {}", job, schedule);
 		if (job.getTaskClass() == null)
 			throw new SchedulerException("Failed to schedule job: Job.taskClass is not set.");
 		
 		dataStore.storeData(job);
 		dataStore.storeData(schedule);
+		logger.info("{} scheduled. Next run: {}", job, schedule.getNextRun());
 		
-		schedulerRunner.schedulerChanged();
+		// Update shedulerRunner with latest change
+		schedulerRunner.wakeUpSleepCycle();
 	}
 }

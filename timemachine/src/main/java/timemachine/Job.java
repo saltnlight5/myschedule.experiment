@@ -26,7 +26,6 @@ public class Job implements Data {
 	
 	@Override
 	public String toString() {
-		String taskClassStr = (taskClass != null) ? taskClass.getName() : "null";
-		return getClass().getSimpleName() + "[id=" + id + ", name=" + name + ", taskClass=" + taskClassStr + "]";
+		return getClass().getSimpleName() + "[id=" + id + ", name=" + name + "]";
 	}
 }

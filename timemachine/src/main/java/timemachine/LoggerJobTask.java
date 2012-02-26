@@ -1,10 +1,8 @@
-package timemachine.impl;
+package timemachine;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import timemachine.JobContext;
-import timemachine.JobTask;
 
 public class LoggerJobTask implements JobTask {
 	private static Logger logger = LoggerFactory.getLogger(LoggerJobTask.class);

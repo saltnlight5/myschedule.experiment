@@ -14,5 +14,6 @@ public interface Scheduler {
 	public void resume();
 	public boolean isPaused();
 	
+	public DataStore getDataStore();
 	public void schedule(Job job, Schedule schedule);
 }

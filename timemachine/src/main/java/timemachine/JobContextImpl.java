@@ -1,9 +1,5 @@
-package timemachine.impl;
+package timemachine;
 
-import timemachine.Job;
-import timemachine.JobContext;
-import timemachine.Schedule;
-import timemachine.Scheduler;
 
 public class JobContextImpl implements JobContext {
 	private Scheduler scheduler;

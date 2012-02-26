@@ -1,4 +1,4 @@
-package timemachine.impl;
+package timemachine;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,9 +11,9 @@ import java.util.Set;
  */
 public class MemoryIdGenerator {
 	private static final String DEFAULT_CATEGORY = MemoryIdGenerator.class.getName();
-	private static Map<String, Set<Long>> idsPerCategory = new HashMap<String, Set<Long>>();
+	private Map<String, Set<Long>> idsPerCategory = new HashMap<String, Set<Long>>();
 	
-	public synchronized Long generateId() {
+	public Long generateId() {
 		return generateId(DEFAULT_CATEGORY);
 	}
 	

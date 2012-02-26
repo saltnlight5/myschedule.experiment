@@ -1,25 +1,14 @@
 package timemachine;
 
-public class Schedule implements Data {
-	private Long id;
-	private String name;
-	private String desc;
-	
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	@Override
-	public String toString() {
-		return getClass().getSimpleName() + "[id=" + id + ", name=" + name + ", desc=" + desc + "]";
-	}
+import java.util.Date;
+
+public interface Schedule extends Data {
+	public Long getId();
+	public void setId(Long id);
+	public String getName();
+	public String getDesc();
+	public Date getNextRun();
+	public void setNextRun(Date date);
+	public Date getStartTime();
+	public Date computeNextRun(Date after);
 }
