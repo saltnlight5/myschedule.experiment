@@ -2,7 +2,6 @@ package integration.timemachine;
 
 import org.junit.Test;
 
-import timemachine.Config;
 import timemachine.FixedIntervalSchedule;
 import timemachine.Job;
 import timemachine.ScheduleUnit;
@@ -14,7 +13,7 @@ public class TimeSchedulerSchedulerTest {
 	
 	@Test
 	public void testScheduleSecondlyJob() throws Exception {
-		Scheduler scheduler = new TimeMachineScheduler(new Config());
+		Scheduler scheduler = new TimeMachineScheduler();
 		scheduler.start();
 		
 		// Schedule a job and let scheduler run for 10 secs.

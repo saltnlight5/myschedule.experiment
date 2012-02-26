@@ -24,6 +24,7 @@ public class TimeMachineScheduler implements Scheduler {
 	private Config config;
 	
 	public TimeMachineScheduler() {
+		this(new Config()); // default config
 	}
 
 	public TimeMachineScheduler(Config config) {
