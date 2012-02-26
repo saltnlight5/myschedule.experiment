@@ -67,7 +67,7 @@ public class SchedulerRunner implements Runnable {
 			}
 			sleepBetweenCheck();
 		}
-		logger.info("Scheduler runner is done.");
+		logger.debug("Scheduler runner is done.");
 	}
 	
 	private void sleepBetweenCheck() {
@@ -91,7 +91,7 @@ public class SchedulerRunner implements Runnable {
 		for (Schedule schedule : schedules) {
 			List<Job> jobs = schedule.getJobs();
 			for (Job job : jobs) {
-				logger.info("Prepare to run {} with {}", job, schedule);
+				logger.debug("Prepare to run {} with {}", job, schedule);
 				runJob(job, schedule);
 			}
 		}
@@ -104,7 +104,7 @@ public class SchedulerRunner implements Runnable {
 	private void runJob(Job job, Schedule schedule) {
 		JobContext jobContext = new JobContextImpl(scheduler, job, schedule);
 		jobThreadPool.execute(new JobRunner(jobContext));
-		logger.info("{} added to thread pool for execution.", job);
+		logger.debug("{} added to thread pool for execution.", job);
 	}
 
 	private void updateSchedulerCheckInterval(Date earliestTime) {
@@ -131,7 +131,7 @@ public class SchedulerRunner implements Runnable {
 		public void run() {
 			Job job = jobContext.getJob();
 			Class<? extends JobTask> jobTaskClass = job.getTaskClass();
-			logger.info("Creating jobTask instance " + jobTaskClass.getName());
+			logger.debug("Creating jobTask instance " + jobTaskClass.getName());
 			try {
 				JobTask task = jobTaskClass.newInstance();
 				logger.info("Running jobTask: " + task);
