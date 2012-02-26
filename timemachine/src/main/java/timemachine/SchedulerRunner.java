@@ -2,6 +2,7 @@ package timemachine;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
@@ -17,9 +18,11 @@ public class SchedulerRunner implements Runnable {
 	private Scheduler scheduler;
 	int batchSize= 1;
 	long batchWindowsInMillis = DateUtil.MILLIS_IN_SECOND;
+	private ExecutorService jobThreadPool;
 	
-	public SchedulerRunner(Scheduler scheduler) {
+	public SchedulerRunner(Scheduler scheduler, ExecutorService jobThreadPool) {
 		this.scheduler = scheduler;
+		this.jobThreadPool = jobThreadPool;
 	}
 	
 	public void wakeUpSleepCycle() {
@@ -86,13 +89,22 @@ public class SchedulerRunner implements Runnable {
 		Date cutoffTime = new Date(System.currentTimeMillis() + batchWindowsInMillis);
 		List<Schedule> schedules = dataStore.getSchedulesToRun(batchSize, cutoffTime);
 		for (Schedule schedule : schedules) {
-			Job job = null;
-			logger.info("Prepare to run {} with {}", job, schedule);
+			List<Job> jobs = schedule.getJobs();
+			for (Job job : jobs) {
+				logger.info("Prepare to run {} with {}", job, schedule);
+				runJob(job, schedule);
+			}
 		}
 
 		// Adjust sleep cycle if necessary.
 		Date earliestTime = dataStore.getEarliestRunTime();
 		updateSchedulerCheckInterval(earliestTime);
+	}
+
+	private void runJob(Job job, Schedule schedule) {
+		JobContext jobContext = new JobContextImpl(scheduler, job, schedule);
+		jobThreadPool.execute(new JobRunner(jobContext));
+		logger.info("{} added to thread pool for execution.", job);
 	}
 
 	private void updateSchedulerCheckInterval(Date earliestTime) {
@@ -103,12 +115,33 @@ public class SchedulerRunner implements Runnable {
 		
 		if (gap < MAX_SCHEDULER_CHECK_INTERVAL) {
 			schedulerCheckInterval = gap;
-			logger.debug("Updated schedulerCheckInterval={}", schedulerCheckInterval);
 			return;
 		} 
 		if (schedulerCheckInterval != MAX_SCHEDULER_CHECK_INTERVAL) {
 			schedulerCheckInterval = MAX_SCHEDULER_CHECK_INTERVAL;
-			logger.debug("Updated schedulerCheckInterval={}", schedulerCheckInterval);
 		}
+	}
+	
+	public static class JobRunner implements Runnable {
+		private JobContext jobContext;
+		public JobRunner(JobContext jobContext) {
+			this.jobContext = jobContext;
+		}
+		@Override
+		public void run() {
+			Job job = jobContext.getJob();
+			Class<? extends JobTask> jobTaskClass = job.getTaskClass();
+			logger.info("Creating jobTask instance " + jobTaskClass.getName());
+			try {
+				JobTask task = jobTaskClass.newInstance();
+				logger.info("Running jobTask: " + task);
+				task.run(jobContext);
+			} catch (InstantiationException e) {
+				throw new SchedulerException("Failed to create JobTask: " + jobTaskClass, e);
+			} catch (IllegalAccessException e) {
+				throw new SchedulerException("Failed to create JobTask: " + jobTaskClass, e);
+			}
+		}
+		
 	}
 }

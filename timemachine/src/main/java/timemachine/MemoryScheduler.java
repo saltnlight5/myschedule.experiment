@@ -44,7 +44,7 @@ public class MemoryScheduler implements Scheduler {
 		dataStore = new MemoryDataStore(idGenerator);
 
 		// Scheduler Runner
-		schedulerRunner = new SchedulerRunner(this);
+		schedulerRunner = new SchedulerRunner(this, threadPool);
 		
 		//Done
 		inited.set(true);
@@ -121,19 +121,22 @@ public class MemoryScheduler implements Scheduler {
 	}
 
 	@Override
-	public void schedule(Job job, Schedule schedule) {
+	public void schedule(Job job) {
 		if (!inited.get())
 			throw new SchedulerException("Failed to schedule job: Scheduler has not be initialized yet.");
-		if (job == null || schedule == null)
+		if (job == null)
 			throw new SchedulerException("Failed to schedule job: Job or schedule is not set.");
 		
-		logger.debug("Scheduling {} with {}", job, schedule);
 		if (job.getTaskClass() == null)
 			throw new SchedulerException("Failed to schedule job: Job.taskClass is not set.");
-		
+
+		logger.debug("Storing {}", job);
 		dataStore.storeData(job);
-		dataStore.storeData(schedule);
-		logger.info("{} scheduled. Next run: {}", job, schedule.getNextRun());
+		for (Schedule schedule : job.getSchedules()) {
+			logger.debug("Scheduling {} with {}.", job, schedule);
+			dataStore.storeData(schedule);
+			logger.info("{} scheduled. The nextRun={}", job, schedule.getNextRun());
+		}
 		
 		// Update shedulerRunner with latest change
 		schedulerRunner.wakeUpSleepCycle();

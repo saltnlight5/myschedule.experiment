@@ -5,14 +5,6 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-import timemachine.FixedIntervalSchedule;
-import timemachine.Job;
-import timemachine.LoggerJobTask;
-import timemachine.MemoryScheduler;
-import timemachine.Schedule;
-import timemachine.ScheduleUnit;
-import timemachine.Scheduler;
-
 public class MemorySchedulerTest {
 	
 	@Test
@@ -104,14 +96,14 @@ public class MemorySchedulerTest {
 		
 		Job job = new Job();
 		job.setTaskClass(LoggerJobTask.class);
-		Schedule schedule = new FixedIntervalSchedule();
-		scheduler.schedule(job, schedule);
+		job.addSchedule(new FixedIntervalSchedule());
+		scheduler.schedule(job);
 		
 		// second job
 		job = new Job();
 		job.setTaskClass(LoggerJobTask.class);
-		schedule = new FixedIntervalSchedule();
-		scheduler.schedule(job, schedule);
+		job.addSchedule(new FixedIntervalSchedule());
+		scheduler.schedule(job);
 	}
 	
 	@Test
@@ -123,8 +115,8 @@ public class MemorySchedulerTest {
 		// Schedule a job and let scheduler run for 5 secs.
 		Job job = new Job();
 		job.setTaskClass(LoggerJobTask.class);
-		FixedIntervalSchedule schedule = new FixedIntervalSchedule(2, ScheduleUnit.SECONDS);
-		scheduler.schedule(job, schedule);
+		job.addSchedule(new FixedIntervalSchedule(2, ScheduleUnit.SECONDS));
+		scheduler.schedule(job);
 		Thread.sleep(10000L);
 		
 		scheduler.destroy();

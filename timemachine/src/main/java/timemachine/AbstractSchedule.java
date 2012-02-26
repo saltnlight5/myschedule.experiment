@@ -1,16 +1,28 @@
 package timemachine;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 public abstract class AbstractSchedule implements Schedule, Comparable<Schedule> {
 	protected Long id;
 	protected String name;
 	protected String desc;
-	/** If null it means there is no more nextRun */
 	protected Date nextRun;
 	protected Date startTime;
+	protected List<Job> jobs = new ArrayList<Job>();
 	
+	@Override
+	public List<Job> getJobs() {
+		return jobs;
+	}
+	public void setJobs(List<Job> jobs) {
+		this.jobs = jobs;
+	}
+	public void addJob(Job job) {
+		jobs.add(job);
+	}
 	public Long getId() {
 		return id;
 	}

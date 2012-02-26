@@ -1,5 +1,6 @@
 package timemachine;
 
+
 public interface Scheduler {
 	public Long getId();
 	
@@ -15,5 +16,5 @@ public interface Scheduler {
 	public boolean isPaused();
 	
 	public DataStore getDataStore();
-	public void schedule(Job job, Schedule schedule);
+	public void schedule(Job job);
 }

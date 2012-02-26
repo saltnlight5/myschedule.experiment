@@ -1,6 +1,7 @@
 package timemachine;
 
 import java.util.Date;
+import java.util.List;
 
 public interface Schedule extends Data {
 	public Long getId();
@@ -11,4 +12,6 @@ public interface Schedule extends Data {
 	public void setNextRun(Date date);
 	public Date getStartTime();
 	public Date computeNextRun(Date after);
+	public List<Job> getJobs();
+	public void addJob(Job job);
 }
