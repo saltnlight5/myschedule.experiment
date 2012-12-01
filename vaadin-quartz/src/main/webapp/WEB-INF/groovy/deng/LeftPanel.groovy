@@ -7,28 +7,54 @@ class LeftPanel extends Tree {
 	String schedulersItemId = "Quartz Schedulers"
 	String toolsItemId = "Tools"
 	HierarchicalContainer treeData
+	MainWindow mainWindow
 	
-	LeftPanel(scheduler) {
+	LeftPanel(mainWindow) {
+		this.mainWindow = mainWindow
+
+		// Setup the scheduler tree
+		def schedulersMap = mainWindow.schedulersMap
 		treeData = new HierarchicalContainer()
 		setContainerDataSource(treeData)
-		initTreeData(scheduler)
+		initTreeData(schedulersMap)
+		
+		// Congifure tree
+		setSelectable(true)
+		setImmediate(true)
+		def itemId = schedulersMap.keySet().iterator().next()
+		select(itemId)
+		// initialize the right panel display with default selected scheduler
+		def rightPanel = mainWindow.rightPanel
+		rightPanel.resetSchedulerTabs(itemId)
 
-		// Expand out all schedulers in a tree
+		// What to do when user select a scheduler name on the tree
+		addValueChangeListener{ event ->
+			def selectedItemId = getValue()
+			if (selectedItemId != null) {
+				mainWindow.rightPanel.resetSchedulerTabs(selectedItemId)
+			}
+		}
+
+		// Expand out all scheduler names and tools in this tree
 		expandItemsRecursively(schedulersItemId)
 		expandItemsRecursively(toolsItemId)
 	}
 
-	def initTreeData(scheduler) {
-
+	def initTreeData(schedulersMap) {
 		// Schedulers item
 		treeData.addItem(schedulersItemId)
-		def schedulerName = scheduler.getSchedulerNameAndId()
-		createNewScheduler(schedulerName)
+		schedulersMap.each { schedulerName, scheduler ->
+			createNewScheduler(schedulerName)
+		}
 		
 		// Tools item
 		treeData.addItem(toolsItemId)
 		createSubItem("Scripting Console", toolsItemId)
 		createSubItem("Cron Builder", toolsItemId)
+	}
+
+	def schedulerExists(schedulerName) {
+		return treeData.getItem(schedulerName) != null
 	}
 
 	def createNewScheduler(schedulerName) {

@@ -10,8 +10,12 @@ scheduler.start() */
 
 import myschedule.quartz.extra.*
 scheduler = new SchedulerTemplate()
-servletContext.setAttribute("scheduler", scheduler)
 scheduler.start()
+
+// Save the scheduler as a map.
+schedulersMap = [:]
+schedulersMap.put(scheduler.getSchedulerNameAndId(), scheduler)
+servletContext.setAttribute("schedulersMap", schedulersMap)
 
 // Schedule some sample jobs -- from myschedule's jobSamples.groovy
 // ================================================================
@@ -88,9 +92,18 @@ quartzScheduler.scheduleJob(job, trigger)
 // Groovy Extension to Vaadin library
 import com.vaadin.*
 import com.vaadin.ui.*
-Button.metaClass.addListener = { closure ->
+import com.vaadin.data.*
+Button.metaClass.addClickListener = { closure ->
 	delegate.addListener(new Button.ClickListener() {
 		@Override void buttonClick(Button.ClickEvent event) {
+			closure.call(event)
+		}
+	})
+}
+
+Tree.metaClass.addValueChangeListener = { closure ->
+	delegate.addListener(new Property.ValueChangeListener() {
+		@Override void valueChange(Property.ValueChangeEvent event){
 			closure.call(event)
 		}
 	})

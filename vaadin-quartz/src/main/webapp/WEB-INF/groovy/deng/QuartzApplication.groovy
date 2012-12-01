@@ -6,7 +6,7 @@ import com.vaadin.data.util.*
 class QuartzApplication extends Application {
 	void init() {
 		def servletContext = getContext().getHttpSession().getServletContext()
-		def scheduler = servletContext.getAttribute("scheduler")
-		setMainWindow(new MainWindow(scheduler))
+		def schedulersMap = servletContext.getAttribute("schedulersMap")
+		setMainWindow(new MainWindow(schedulersMap))
 	}
 }

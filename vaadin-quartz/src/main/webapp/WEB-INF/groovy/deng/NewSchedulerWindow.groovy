@@ -2,6 +2,7 @@ package deng
 import com.vaadin.*
 import com.vaadin.ui.*
 import com.vaadin.terminal.*
+import myschedule.quartz.extra.*
 class NewSchedulerWindow extends Window {
 	TextArea editor
 	MainWindow mainWindow
@@ -30,6 +31,10 @@ class NewSchedulerWindow extends Window {
 		toolbar.addComponent(createCancelButton())
 	}
 
+	def closeWindow() {
+		mainWindow.removeWindow(this)
+	}
+
 	def createEditorTextArea() {
 		this.editor = new TextArea("Quartz Scheduler Config Properties")
 		editor.setSizeFull()
@@ -38,27 +43,40 @@ class NewSchedulerWindow extends Window {
 
 	def createSaveButton() {
 		def button = new Button("Save")
-		button.addListener{ event -> 
-			processNewSchedulerSettings()
-			closeWindow()
+		button.addClickListener{ event -> 
+			try {
+				processNewSchedulerSettings()
+				closeWindow()
+			} catch (Exception e) {
+				showError(e.getMessage())
+			}
 		}
 		return button
 	}
 
+	def showError(msg) {
+		showNotification(null, msg, Window.Notification.TYPE_ERROR_MESSAGE)
+	}
+
 	def createCancelButton() {
 		def button = new Button("Cancel")
-		button.addListener{ event -> closeWindow() }
+		button.addClickListener{ event -> closeWindow() }
 		return button
 	}
 
 	def processNewSchedulerSettings() {
 		def text = editor.getValue()
 		def props = Properties.loadFromString(text)
-		def name = props.getProperty("org.quartz.schedulerName", "DefaultQuartzScheduler")
-		mainWindow.leftPanel.createNewScheduler(name)
-	}
+		def name = props.getProperty("org.quartz.scheduler.instanceName", "DefaultQuartzScheduler")
+		def id = props.getProperty("org.quartz.scheduler.instanceId", "NON_CLUSTERED")
+		def itemId = name + '_$_' + id
+		def leftPanel = mainWindow.leftPanel
 
-	def closeWindow() {
-		mainWindow.removeWindow(this)
+		if (leftPanel.schedulerExists(itemId))
+			throw new RuntimeException("Scheduler instance name and id '$itemId' already exists.")
+		
+		def scheduler = new SchedulerTemplate(props)
+		mainWindow.schedulersMap.put(itemId, scheduler)
+		leftPanel.createNewScheduler(itemId)
 	}
 }

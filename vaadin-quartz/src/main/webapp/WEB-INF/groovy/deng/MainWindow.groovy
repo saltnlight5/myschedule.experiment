@@ -2,21 +2,25 @@ package deng
 import com.vaadin.*
 import com.vaadin.ui.*
 import com.vaadin.terminal.*
+import myschedule.quartz.extra.*
 class MainWindow extends Window {
 	HorizontalLayout toolbar
 	HorizontalSplitPanel splitPanel
 	LeftPanel leftPanel
 	RightPanel rightPanel
+	Map<String, SchedulerTemplate> schedulersMap
 
-	MainWindow(scheduler) {
+	MainWindow(schedulersMap) {
+		this.schedulersMap = schedulersMap
+
 		// Use window's layout as a component container.
 		def content = getLayout()
 		content.setSizeFull()
 		content.setSpacing(true)
 		
 		// Create the toolbar
-		leftPanel = new LeftPanel(scheduler)
-		rightPanel = new RightPanel(scheduler)
+		rightPanel = new RightPanel(this) // This order is important, since leftPanel depends on rightPanel.
+		leftPanel = new LeftPanel(this)
 		toolbar = new HorizontalLayout()
 		content.addComponent(toolbar)
 		toolbar.setSpacing(true)
@@ -33,7 +37,7 @@ class MainWindow extends Window {
 
 	def createNewSchedulerButton(leftPanel) {
 		def button = new Button("New Scheduler")
-		button.addListener{ event ->
+		button.addClickListener{ event ->
 			addWindow(new NewSchedulerWindow(this)) 
 		}
 		return button
