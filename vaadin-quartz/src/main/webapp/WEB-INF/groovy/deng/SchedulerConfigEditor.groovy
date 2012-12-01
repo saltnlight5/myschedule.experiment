@@ -3,11 +3,13 @@ import com.vaadin.*
 import com.vaadin.ui.*
 import com.vaadin.terminal.*
 import myschedule.quartz.extra.*
-class NewSchedulerWindow extends Window {
+import org.slf4j.*
+class SchedulerConfigEditor extends Window {
+	static Logger logger = LoggerFactory.getLogger(SchedulerConfigEditor.class)
 	TextArea editor
 	MainWindow mainWindow
 
-	public NewSchedulerWindow(mainWindow) {
+	public SchedulerConfigEditor(mainWindow) {
 		this.mainWindow = mainWindow
 
 		// Setup this window
@@ -48,6 +50,7 @@ class NewSchedulerWindow extends Window {
 				processNewSchedulerSettings()
 				closeWindow()
 			} catch (Exception e) {
+				logger.error("Failed to create new scheduler.", e)
 				showError(e.getMessage())
 			}
 		}

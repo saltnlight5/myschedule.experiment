@@ -38,7 +38,7 @@ class MainWindow extends Window {
 	def createNewSchedulerButton(leftPanel) {
 		def button = new Button("New Scheduler")
 		button.addClickListener{ event ->
-			addWindow(new NewSchedulerWindow(this)) 
+			addWindow(new SchedulerConfigEditor(this)) 
 		}
 		return button
 	}

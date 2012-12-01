@@ -9,7 +9,10 @@ servletContext.setAttribute("scheduler", scheduler)
 scheduler.start() */
 
 import myschedule.quartz.extra.*
-scheduler = new SchedulerTemplate()
+def quartzProps = new Properties()
+quartzProps['org.quartz.scheduler.instanceName'] = 'SampleScheduler'
+quartzProps['org.quartz.threadPool.threadCount'] = '5'
+scheduler = new SchedulerTemplate(quartzProps)
 scheduler.start()
 
 // Save the scheduler as a map.
