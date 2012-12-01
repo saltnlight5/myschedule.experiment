@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+		version="2.5">
+
+	<description>Groovy Web Application</description>
+	<!--
+	<welcome-file-list>
+		<welcome-file>home.groovy</welcome-file>
+	</welcome-file-list>
+	<servlet>
+		<servlet-name>GroovyServlet</servlet-name>
+		<servlet-class>groovy.servlet.GroovyServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GroovyServlet</servlet-name>
+		<url-pattern>*.groovy</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>TemplateServlet</servlet-name>
+		<servlet-class>groovy.servlet.TemplateServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>TemplateServlet</servlet-name>
+		<url-pattern>*.gt</url-pattern>
+	</servlet-mapping>
+	-->
+
+	<!--
+	<servlet>
+		<servlet-name>VaadinApplicationServlet</servlet-name>
+		<servlet-class>com.vaadin.terminal.gwt.server.ApplicationServlet</servlet-class>
+		<init-param>
+			<description>Vaadin application class to start</description>
+			<param-name>application</param-name>
+			<param-value>deng.MyApp</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>VaadinApplicationServlet</servlet-name>
+		<url-pattern>/*</url-pattern>
+	</servlet-mapping>
+	-->
+
+	<servlet>
+		<servlet-name>GroovyVaadin</servlet-name>
+		<servlet-class>deng.GroovyApplicationServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+		<init-param>
+			<param-name>application</param-name>
+			<param-value>deng.QuartzApplication</param-value>
+		</init-param>
+		<init-param>
+			<param-name>scriptsPath</param-name>
+			<param-value>/WEB-INF/groovy</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>GroovyVaadin</servlet-name>
+		<url-pattern>/*</url-pattern>
+	</servlet-mapping>
+	
+	<listener>
+		<listener-class>deng.GroovyContextListener</listener-class>
+	</listener>
+	<context-param>  
+	   <param-name>initScripts</param-name>
+	   <param-value>/WEB-INF/groovy/init.groovy</param-value>
+	</context-param>
+	<context-param>    
+	   <param-name>destroyScripts</param-name>
+	   <param-value>/WEB-INF/groovy/destroy.groovy</param-value>
+	</context-param>
+</web-app>
